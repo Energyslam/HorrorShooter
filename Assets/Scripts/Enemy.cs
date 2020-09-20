@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,70 +11,63 @@ public class Enemy : MonoBehaviour
     Animator animator;
     bool running;
     bool chasing;
+    bool isDead;
+    [SerializeField]Image healthBar;
 
-    float maxLife;
+    [SerializeField]float maxLife;
     float currentLife;
 
     public float nextAnimation;
     public float animationDelay;
+
+    [SerializeField]Transform currentTarget;
+
+    float timeBeforeMove = 2f;
+    float currentTime;
+
+    float walkingSpeed = 2.5f;
+    float runningSpeed = 7.0f;
+
+    public enum State
+    {
+        Idle,
+        Walking,
+        Running
+    }
+
+    public State state = State.Idle;
+
     void Start()
+    {
+        Initialize();
+        SetNewTarget();
+    }
+
+    void Initialize()
     {
         agent = this.GetComponent<NavMeshAgent>();
         animator = this.GetComponent<Animator>();
         currentLife = maxLife;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
+
+        CheckForTarget();
         float velocity = agent.velocity.magnitude / agent.speed;
+
+        animator.SetFloat("Speed", velocity);
 
         if (chasing)
         {
             agent.destination = GameManager.Instance.Player.transform.position;
         }
-
-        if (velocity > 0f)
-        {
-            if (running)
-            {
-                animator.SetFloat("Speed", velocity * 2f);
-            }
-            else
-            {
-                animator.SetFloat("Speed", velocity);
-            }
-        }
-        else
-        {
-            animator.SetFloat("Speed", 0f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            chasing = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            running = true;
-            agent.speed = agent.speed * 2f;
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            agent.speed = 0f;
-            chasing = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            agent.speed = 5f;
-        }
     }
-
     public void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         if (Time.time > nextAnimation)
         {
             animator.SetTrigger("Hit");
@@ -82,14 +76,74 @@ public class Enemy : MonoBehaviour
 
         if (currentLife - damage < 0f)
         {
-            //die
+            Die();
+
         }
         else
         {
             currentLife -= damage;
-            //update healthcounter?
+        }
+        UpdateUI();
+        //Keep particle system spawning in Gun script, or move here?
+    }
+
+    void UpdateUI()
+    {
+        if (!healthBar.transform.parent.gameObject.activeInHierarchy)
+        {
+            healthBar.transform.parent.gameObject.SetActive(true);
+        }
+        healthBar.fillAmount = currentLife / maxLife;
+    }
+
+    void Die()
+    {
+        currentLife = 0;
+        animator.SetTrigger("Die");
+        isDead = true;
+    }
+
+    void SetNewTarget()
+    {
+        Transform temp = MonsterCheckpointHandler.Instance.monsterCheckpoints[Random.Range(0, MonsterCheckpointHandler.Instance.monsterCheckpoints.Count)];
+        if (currentTarget != temp)
+        {
+            currentTarget = temp;
+            agent.SetDestination(currentTarget.position);
+            StartWalking();
         }
 
-        //spawn particle system // object pool
+    }
+
+    void CheckForTarget()
+    {
+        if (agent.remainingDistance < 2f)
+        {
+            Idle();
+        }
+    }
+
+    void Idle()
+    {
+        StopMoving();
+        currentTime = Time.time;
+    }
+
+    void StopMoving()
+    {
+        agent.speed = 0f;
+        state = State.Idle;
+    }
+
+    void StartRunning()
+    {
+        agent.speed = runningSpeed;
+        state = State.Running;
+    }
+
+    void StartWalking()
+    {
+        agent.speed = walkingSpeed;
+        state = State.Walking;
     }
 }

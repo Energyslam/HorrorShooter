@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A class for storing generic GameObject items so an object pool can be created.
+/// </summary>
 [System.Serializable]
 public class ObjectPoolItem
 {
@@ -10,18 +13,21 @@ public class ObjectPoolItem
     public bool shouldExpand;
 }
 
+
+/// <summary>
+/// Holds and handles object pools. All objects are stored in the same list, and objects can be retrieved by using their tag.
+/// </summary>
 public class ObjectPoolHandler : MonoBehaviour
 {
-    public List<ObjectPoolItem> itemsToPool;
-    public List<GameObject> pooledObjects;
-    [SerializeField] GameObject decal;
-    Vector3 standardSize;
     private static ObjectPoolHandler _instance;
     public static ObjectPoolHandler Instance { get { return _instance; } }
 
-    List<GameObject> decals = new List<GameObject>();
-    [SerializeField] int decalLimit = 100;
-    int currentDecal = 0;
+    public List<ObjectPoolItem> itemsToPool;
+
+    public List<GameObject> pooledObjects;
+
+    private Vector3 standardDecalSize;
+
     void Awake()
     {
         if (_instance == null)
@@ -41,20 +47,12 @@ public class ObjectPoolHandler : MonoBehaviour
         {
             for (int i = 0; i < item.amountToPool; i++)
             {
-                GameObject go = (GameObject)Instantiate(item.objectToPool);
+                GameObject go = (GameObject)Instantiate(item.objectToPool, this.transform);
                 go.SetActive(false);
                 pooledObjects.Add(go);
             }
         }
-
-        for (int i = 0; i < decalLimit; i++)
-        {
-            GameObject newDecal = Instantiate(decal, this.transform);
-            newDecal.SetActive(false);
-            decals.Add(newDecal);
-        }
-
-        standardSize = decal.transform.localScale;
+        standardDecalSize = GetPooledObject("Decal").transform.localScale;
     }
 
     public GameObject GetPooledObject(string tag)
@@ -91,7 +89,7 @@ public class ObjectPoolHandler : MonoBehaviour
         GO.transform.position = position + normal.normalized * 0.0001f;
         GO.transform.rotation = decalRotation;
         GO.transform.Rotate(transform.up, Random.Range(-180f, 180f));
-        GO.transform.localScale = standardSize * Random.Range(0.8f, 1.2f);
+        GO.transform.localScale = standardDecalSize * Random.Range(0.8f, 1.2f);
     }
 
     public void CreateBlood(Vector3 direction, Vector3 position)
@@ -104,4 +102,14 @@ public class ObjectPoolHandler : MonoBehaviour
         GO.SetActive(true);
     }
 
+    public void CreateTracer(Vector3 direction, Vector3 position, float force)
+    {
+        GameObject GO = GetPooledObject("Tracer");
+        GO.GetComponent<TrailRenderer>().Clear();
+        GO.SetActive(true);
+        GO.transform.position = position;
+
+        GO.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GO.GetComponent<Rigidbody>().AddForce(direction * force, ForceMode.Impulse);
+    }
 }

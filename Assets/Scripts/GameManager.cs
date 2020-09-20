@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Singleton class for holding references to permanent objects such as the player, and performing global tasks.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;

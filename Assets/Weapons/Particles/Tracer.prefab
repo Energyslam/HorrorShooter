@@ -14,7 +14,9 @@ GameObject:
   - component: {fileID: 199523722639420988}
   - component: {fileID: 54037348715580418}
   - component: {fileID: 3693169916715757202}
-  m_Layer: 0
+  - component: {fileID: 7438789337084799388}
+  - component: {fileID: 9164555672624160219}
+  m_Layer: 8
   m_Name: Tracer
   m_TagString: Tracer
   m_Icon: {fileID: 0}
@@ -29,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772605592653434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.21, y: 13.932, z: 9.64}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,7 +78,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.1
+  m_Time: 0.05
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.1
@@ -140,7 +142,7 @@ TrailRenderer:
     shadowBias: 0
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_Autodestruct: 1
+  m_Autodestruct: 0
   m_Emitting: 1
 --- !u!198 &198574281090763886
 ParticleSystem:
@@ -2211,7 +2213,7 @@ ParticleSystem:
         m_RotationOrder: 4
     inWorldSpace: 0
   InheritVelocityModule:
-    enabled: 1
+    enabled: 0
     m_Mode: 1
     m_Curve:
       serializedVersion: 2
@@ -3959,9 +3961,9 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 0
+    enabled: 1
     ratio: 1
-    light: {fileID: 0}
+    light: {fileID: 108000013609061350, guid: 6aec9fbdc19e0604dbee54b3895844c8, type: 3}
     randomDistribution: 1
     color: 1
     range: 1
@@ -4072,7 +4074,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    maxLights: 2
+    maxLights: 10
   TrailModule:
     enabled: 1
     mode: 0
@@ -4982,4 +4984,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c4ed635053ab04099a2d295ad2aae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeTime: 2
+  activeTime: 5
+--- !u!114 &7438789337084799388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772605592653434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a155caa6c226042af307ee0e39107a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugGizmo: {fileID: 4812425966533754070, guid: 79684bd882430254ea514ac240af161f, type: 3}
+--- !u!135 &9164555672624160219
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772605592653434}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0, z: 0}

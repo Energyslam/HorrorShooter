@@ -17,6 +17,14 @@ public class Gun : MonoBehaviour
     float maxClipAmmo = 30;
     float currentClipAmmo;
 
+    int maxTracerRounds = 5;
+    int currentTracerRounds;
+    [SerializeField]int tracerFrequency = 5;
+
+    [SerializeField] Transform tracerOrigin;
+
+    [SerializeField] float tracerForce;
+
     Transform cam;
     // Start is called before the first frame update
     void Start()
@@ -24,6 +32,7 @@ public class Gun : MonoBehaviour
         animator = this.GetComponent<Animator>();
         audio = this.GetComponent<AudioSource>();
         currentClipAmmo = maxClipAmmo;
+        currentTracerRounds = maxTracerRounds;
         cam = Camera.main.transform;
     }
 
@@ -37,6 +46,11 @@ public class Gun : MonoBehaviour
             nextFire = Time.time + fireDelay;
             CastRay();
         }
+    }
+
+    public void FireTracer()
+    {
+        ObjectPoolHandler.Instance.CreateTracer(Camera.main.transform.forward, tracerOrigin.position, tracerForce);
     }
 
     void CastRay()

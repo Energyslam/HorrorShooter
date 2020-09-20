@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Attached to object pool items to deactive itself after a set amount of time after being activated.
+/// </summary>
 public class ActiveTimer : MonoBehaviour
 {
     public float activeTime;
@@ -13,7 +16,6 @@ public class ActiveTimer : MonoBehaviour
         creationTime = Time.time;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Time.time > creationTime + activeTime)

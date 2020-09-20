@@ -19,15 +19,17 @@ public class Player : MonoBehaviour
     Vector3 gravityVelocity;
     bool isGrounded;
     #endregion
-
-    [SerializeField] Gun currentGun;
+    #region CharacterSway
     public float swayIntensity;
     public float minSwaySpeed;
     public float maxSwaySpeed;
     public float currentSwaySpeed;
     public float swayBuildUp;
-    GameObject gunGO;
     float initialZ;
+    #endregion
+
+    [SerializeField] Gun currentGun;
+    GameObject gunGO;
 
     public float swayTimer;
     void Start()
@@ -43,6 +45,10 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             currentGun.Fire();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            currentGun.FireTracer();
         }
         RotatePlayer();
         MovePlayer();
