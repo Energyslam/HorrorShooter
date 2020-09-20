@@ -1,0 +1,357 @@
+fileFormatVersion: 2
+guid: e961740b88d539e4c96933733e8bec36
+timeCreated: 1458239559
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Abdomen_0
+    100002: Abdomen_1
+    100004: Abdomen_2
+    100006: Abdomen_3
+    100008: cephalothorax
+    100010: chelicere_L_a
+    100012: chelicere_L_b
+    100014: chelicere_R_a
+    100016: chelicere_R_b
+    100018: //RootNode
+    100020: DARKNESS_SPIDER_ROOT
+    100022: Dummy025
+    100024: hook_L
+    100026: hook_R
+    100028: leg_L_0_a
+    100030: leg_L_0_b
+    100032: leg_L_0_c
+    100034: leg_L_0_d
+    100036: leg_L_0_e
+    100038: leg_L_1_a
+    100040: leg_L_1_b
+    100042: leg_L_1_c
+    100044: leg_L_1_d
+    100046: leg_L_1_e
+    100048: leg_L_2_a
+    100050: leg_L_2_b
+    100052: leg_L_2_c
+    100054: leg_L_2_d
+    100056: leg_L_2_e
+    100058: leg_L_3_a
+    100060: leg_L_3_b
+    100062: leg_L_3_c
+    100064: leg_L_3_d
+    100066: leg_L_3_e
+    100068: leg_R_0_a
+    100070: leg_R_0_b
+    100072: leg_R_0_c
+    100074: leg_R_0_d
+    100076: leg_R_0_e
+    100078: leg_R_1_a
+    100080: leg_R_1_b
+    100082: leg_R_1_c
+    100084: leg_R_1_d
+    100086: leg_R_1_e
+    100088: leg_R_2_a
+    100090: leg_R_2_b
+    100092: leg_R_2_c
+    100094: leg_R_2_d
+    100096: leg_R_2_e
+    100098: leg_R_3_a
+    100100: leg_R_3_b
+    100102: leg_R_3_c
+    100104: leg_R_3_d
+    100106: leg_R_3_e
+    100108: mandibul_L_a
+    100110: mandibul_L_b
+    100112: mandibul_L_c
+    100114: mandibul_L_d
+    100116: mandibul_R_a
+    100118: mandibul_R_b
+    100120: mandibul_R_c
+    100122: mandibul_R_d
+    400000: Abdomen_0
+    400002: Abdomen_1
+    400004: Abdomen_2
+    400006: Abdomen_3
+    400008: cephalothorax
+    400010: chelicere_L_a
+    400012: chelicere_L_b
+    400014: chelicere_R_a
+    400016: chelicere_R_b
+    400018: //RootNode
+    400020: DARKNESS_SPIDER_ROOT
+    400022: Dummy025
+    400024: hook_L
+    400026: hook_R
+    400028: leg_L_0_a
+    400030: leg_L_0_b
+    400032: leg_L_0_c
+    400034: leg_L_0_d
+    400036: leg_L_0_e
+    400038: leg_L_1_a
+    400040: leg_L_1_b
+    400042: leg_L_1_c
+    400044: leg_L_1_d
+    400046: leg_L_1_e
+    400048: leg_L_2_a
+    400050: leg_L_2_b
+    400052: leg_L_2_c
+    400054: leg_L_2_d
+    400056: leg_L_2_e
+    400058: leg_L_3_a
+    400060: leg_L_3_b
+    400062: leg_L_3_c
+    400064: leg_L_3_d
+    400066: leg_L_3_e
+    400068: leg_R_0_a
+    400070: leg_R_0_b
+    400072: leg_R_0_c
+    400074: leg_R_0_d
+    400076: leg_R_0_e
+    400078: leg_R_1_a
+    400080: leg_R_1_b
+    400082: leg_R_1_c
+    400084: leg_R_1_d
+    400086: leg_R_1_e
+    400088: leg_R_2_a
+    400090: leg_R_2_b
+    400092: leg_R_2_c
+    400094: leg_R_2_d
+    400096: leg_R_2_e
+    400098: leg_R_3_a
+    400100: leg_R_3_b
+    400102: leg_R_3_c
+    400104: leg_R_3_d
+    400106: leg_R_3_e
+    400108: mandibul_L_a
+    400110: mandibul_L_b
+    400112: mandibul_L_c
+    400114: mandibul_L_d
+    400116: mandibul_R_a
+    400118: mandibul_R_b
+    400120: mandibul_R_c
+    400122: mandibul_R_d
+    7400000: Bite3HitCombo
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Bite3HitCombo
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/Abdomen_1
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/Abdomen_1/Abdomen_2
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/Abdomen_1/Abdomen_2/Abdomen_3
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/Abdomen_1/Abdomen_2/Abdomen_3/hook_L
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/Abdomen_1/Abdomen_2/Abdomen_3/hook_R
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/chelicere_L_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/chelicere_L_a/chelicere_L_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/chelicere_R_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/chelicere_R_a/chelicere_R_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_0_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_0_a/leg_L_0_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_0_a/leg_L_0_b/leg_L_0_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_0_a/leg_L_0_b/leg_L_0_c/leg_L_0_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_0_a/leg_L_0_b/leg_L_0_c/leg_L_0_d/leg_L_0_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_1_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_1_a/leg_L_1_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_1_a/leg_L_1_b/leg_L_1_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_1_a/leg_L_1_b/leg_L_1_c/leg_L_1_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_1_a/leg_L_1_b/leg_L_1_c/leg_L_1_d/leg_L_1_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_2_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_2_a/leg_L_2_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_2_a/leg_L_2_b/leg_L_2_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_2_a/leg_L_2_b/leg_L_2_c/leg_L_2_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_2_a/leg_L_2_b/leg_L_2_c/leg_L_2_d/leg_L_2_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_3_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_3_a/leg_L_3_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_3_a/leg_L_3_b/leg_L_3_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_3_a/leg_L_3_b/leg_L_3_c/leg_L_3_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_L_3_a/leg_L_3_b/leg_L_3_c/leg_L_3_d/leg_L_3_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_0_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_0_a/leg_R_0_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_0_a/leg_R_0_b/leg_R_0_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_0_a/leg_R_0_b/leg_R_0_c/leg_R_0_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_0_a/leg_R_0_b/leg_R_0_c/leg_R_0_d/leg_R_0_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_1_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_1_a/leg_R_1_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_1_a/leg_R_1_b/leg_R_1_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_1_a/leg_R_1_b/leg_R_1_c/leg_R_1_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_1_a/leg_R_1_b/leg_R_1_c/leg_R_1_d/leg_R_1_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_2_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_2_a/leg_R_2_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_2_a/leg_R_2_b/leg_R_2_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_2_a/leg_R_2_b/leg_R_2_c/leg_R_2_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_2_a/leg_R_2_b/leg_R_2_c/leg_R_2_d/leg_R_2_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_3_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_3_a/leg_R_3_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_3_a/leg_R_3_b/leg_R_3_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_3_a/leg_R_3_b/leg_R_3_c/leg_R_3_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/leg_R_3_a/leg_R_3_b/leg_R_3_c/leg_R_3_d/leg_R_3_e
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_L_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_L_a/mandibul_L_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_L_a/mandibul_L_b/mandibul_L_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_L_a/mandibul_L_b/mandibul_L_c/mandibul_L_d
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_R_a
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_R_a/mandibul_R_b
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_R_a/mandibul_R_b/mandibul_R_c
+        weight: 1
+      - path: DARKNESS_SPIDER_ROOT/Abdomen_0/cephalothorax/Dummy025/mandibul_R_a/mandibul_R_b/mandibul_R_c/mandibul_R_d
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: DARKNESS_SPIDER_ROOT
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: aa45771edf70475439a64aec39a3a8d1,
+    type: 3}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
