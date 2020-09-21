@@ -38,7 +38,17 @@ public class Enemy : MonoBehaviour
     float currentBreath = 0f;
     float nextBreath = 5f;
     float baseBreathDelay = 5f;
+
+    [SerializeField] bool GetTargetAtBeginning;
     #endregion
+
+    enum State
+    {
+        Idle,
+        Walking,
+        Chasing,
+        Dead,
+    }
 
     void Start()
     {
@@ -70,7 +80,7 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(GameManager.Instance.Player.transform.position);
         }
 
-        if (agent.remainingDistance < 2f && !isIdle) //TODO: change 2f to meaningful value
+        if (agent.remainingDistance < 2f && !isIdle) //TODO: change 2f to meaningful value || GAAT HIER ALTIJD IN AAN HET BEGIN OMDAT HIJ NOG GEEN DESTINATION HEEFT GEHAD (denk ik, maar iig komthij hier altijd atm)
         {
             if (isChasing)
             {
