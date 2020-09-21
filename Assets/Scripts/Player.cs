@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         {
             currentGun.Fire();
         }
-        if (Input.GetMouseButtonDown(1))
+        else if (Input.GetMouseButtonDown(1))
         {
             currentGun.FireTracer();
         }
@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && !Input.GetMouseButton(0))
         {
-            move = move * movementSpeed * 2f * Time.deltaTime;
+            move = move * movementSpeed * 1.5f * Time.deltaTime;
         }
         else
         {

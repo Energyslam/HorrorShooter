@@ -4997,7 +4997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a155caa6c226042af307ee0e39107a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugGizmo: {fileID: 4812425966533754070, guid: 79684bd882430254ea514ac240af161f, type: 3}
+  gizmo: {fileID: 4812425966533754070, guid: 79684bd882430254ea514ac240af161f, type: 3}
 --- !u!135 &9164555672624160219
 SphereCollider:
   m_ObjectHideFlags: 0

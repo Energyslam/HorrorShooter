@@ -9,11 +9,13 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     NavMeshAgent agent;
     Animator animator;
-    bool running;
-    bool chasing;
-    bool isDead;
-    [SerializeField]Image healthBar;
+    AudioSource audio;
 
+    bool isChasing;
+    bool isIdle;
+    bool isDead;
+    bool isFading;
+    [SerializeField]Image healthBar;
     [SerializeField]float maxLife;
     float currentLife;
 
@@ -26,55 +28,111 @@ public class Enemy : MonoBehaviour
     float currentTime;
 
     float walkingSpeed = 2.5f;
-    float runningSpeed = 7.0f;
+    float runningSpeed = 5f;
 
-    public enum State
-    {
-        Idle,
-        Walking,
-        Running
-    }
+    #region Audio
+    [SerializeField] List<AudioClip> breathingClips;
+    [SerializeField] List<AudioClip> damageClips;
+    [SerializeField] AudioClip deathClip;
 
-    public State state = State.Idle;
+    float currentBreath = 0f;
+    float nextBreath = 5f;
+    float baseBreathDelay = 5f;
+    #endregion
 
     void Start()
     {
         Initialize();
-        SetNewTarget();
     }
 
     void Initialize()
     {
         agent = this.GetComponent<NavMeshAgent>();
         animator = this.GetComponent<Animator>();
+        audio = this.GetComponent<AudioSource>();
         currentLife = maxLife;
+        currentTarget = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint();
+        agent.SetDestination(currentTarget.position);
     }
 
     void Update()
     {
-        if (isDead) return;
-
-        CheckForTarget();
-        float velocity = agent.velocity.magnitude / agent.speed;
-
-        animator.SetFloat("Speed", velocity);
-
-        if (chasing)
+        if (isFading)
         {
-            agent.destination = GameManager.Instance.Player.transform.position;
+            this.transform.position += transform.up * -1f * Time.deltaTime;
+        }
+        if (isDead) return;
+        Breathe();
+        animator.SetFloat("Speed", GetVelocity());
+
+        if (isChasing)
+        {
+            agent.SetDestination(GameManager.Instance.Player.transform.position);
+        }
+
+        if (agent.remainingDistance < 2f && !isIdle)
+        {
+            if (isChasing)
+            {
+                //attack
+            }
+            else if (!isChasing)
+            {
+                StartCoroutine(StayIdle());
+            }
+        }
+    }
+
+    //TOOD: Turn off UI after a second or so, ugly to keep around
+
+    IEnumerator StayIdle()
+    {
+        isIdle = true;
+        // look around or something
+        yield return new WaitForSeconds(3f);
+        SetNewTarget();
+        isIdle = false;
+        //set new target
+    }
+
+    public void SetNewTarget()
+    {
+        agent.SetDestination(MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint(currentTarget).position);
+    }
+
+    void Breathe()
+    {
+        if (Time.time > currentBreath + nextBreath && !isChasing)
+        {
+            currentBreath = Time.time;
+            nextBreath = baseBreathDelay * Random.Range(0.8f, 1.2f);
+            if (!audio.isPlaying)
+            {
+                audio.clip = breathingClips[Random.Range(0, breathingClips.Count)];
+                audio.Play();
+            }
         }
     }
     public void TakeDamage(float damage)
     {
         if (isDead) return;
 
-        if (Time.time > nextAnimation)
+        if (!isChasing)
         {
-            animator.SetTrigger("Hit");
-            nextAnimation = Time.time + animationDelay;
+            StartChasing();
         }
 
-        if (currentLife - damage < 0f)
+        if (Time.time > nextAnimation)
+        {
+            //prolong agent delay before speedy;
+            animator.SetTrigger("Hit");
+            agent.velocity = Vector3.zero;
+            nextAnimation = Time.time + animationDelay;
+            audio.clip = damageClips[Random.Range(0, damageClips.Count)];
+            audio.Play();
+        }
+
+        if (currentLife - damage <= 0f)
         {
             Die();
 
@@ -84,7 +142,12 @@ public class Enemy : MonoBehaviour
             currentLife -= damage;
         }
         UpdateUI();
-        //Keep particle system spawning in Gun script, or move here?
+    }
+
+    void StartChasing()
+    {
+        isChasing = true;
+        agent.speed = runningSpeed;
     }
 
     void UpdateUI()
@@ -101,49 +164,35 @@ public class Enemy : MonoBehaviour
         currentLife = 0;
         animator.SetTrigger("Die");
         isDead = true;
+        agent.isStopped = true;
+        audio.clip = deathClip;
+        audio.Play();
+        StartCoroutine(waitUntilFade());
     }
 
-    void SetNewTarget()
+    IEnumerator waitUntilFade()
     {
-        Transform temp = MonsterCheckpointHandler.Instance.monsterCheckpoints[Random.Range(0, MonsterCheckpointHandler.Instance.monsterCheckpoints.Count)];
-        if (currentTarget != temp)
+        yield return new WaitForSeconds(5f);
+        healthBar.gameObject.transform.parent.gameObject.SetActive(false);
+        agent.enabled = false;
+        isFading = true;
+        yield return new WaitForSeconds(5f);
+        this.gameObject.SetActive(false);
+    }
+
+    float GetVelocity()
+    {
+        if (agent.speed == walkingSpeed)
         {
-            currentTarget = temp;
-            agent.SetDestination(currentTarget.position);
-            StartWalking();
+            return agent.velocity.magnitude / walkingSpeed;
         }
-
-    }
-
-    void CheckForTarget()
-    {
-        if (agent.remainingDistance < 2f)
+        else if (agent.speed == runningSpeed)
         {
-            Idle();
+            return agent.velocity.magnitude / runningSpeed * 2f;
         }
-    }
-
-    void Idle()
-    {
-        StopMoving();
-        currentTime = Time.time;
-    }
-
-    void StopMoving()
-    {
-        agent.speed = 0f;
-        state = State.Idle;
-    }
-
-    void StartRunning()
-    {
-        agent.speed = runningSpeed;
-        state = State.Running;
-    }
-
-    void StartWalking()
-    {
-        agent.speed = walkingSpeed;
-        state = State.Walking;
+        else
+        {
+            return 0f;
+        }
     }
 }

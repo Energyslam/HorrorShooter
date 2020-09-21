@@ -18,16 +18,37 @@ public class MonsterCheckpointHandler : MonoBehaviour
         {
             Destroy(this);
         }
-    }
 
-    void Start()
-    {
-        foreach(Transform t in transform)
+        foreach (Transform t in transform)
         {
             if (t.gameObject.activeInHierarchy)
             {
                 monsterCheckpoints.Add(t);
             }
         }
+    }
+
+    /// <summary>
+    /// Retrieves a random checkpoint from the list of active checkpoints
+    /// </summary>
+    /// <returns>A random active checkpoint</returns>
+    public Transform ReturnRandomCheckpoint()
+    {
+        Transform tmp = monsterCheckpoints[Random.Range(0, monsterCheckpoints.Count)];
+        return tmp;
+    }
+    /// <summary>
+    /// Retrieves a random checkpoint from the list of active checkpoints that is not the same as the given checkpoint
+    /// </summary>
+    /// <param name="current">Transform of the current targeted checkpoint</param>
+    /// <returns></returns>
+    public Transform ReturnRandomCheckpoint(Transform current)
+    {
+        Transform tmp = monsterCheckpoints[Random.Range(0, monsterCheckpoints.Count)];
+        if (tmp == current)
+        {
+            tmp = ReturnRandomCheckpoint(current);
+        }
+        return tmp;
     }
 }

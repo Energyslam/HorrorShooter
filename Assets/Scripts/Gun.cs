@@ -13,6 +13,9 @@ public class Gun : MonoBehaviour
     float nextFire;
     [SerializeField] float fireDelay = 0.05f;
 
+    float nextFlare;
+    [SerializeField] float flareDelay = 2f;
+
     float maxAmmo = 120;
     float maxClipAmmo = 30;
     float currentClipAmmo;
@@ -50,7 +53,15 @@ public class Gun : MonoBehaviour
 
     public void FireTracer()
     {
-        ObjectPoolHandler.Instance.CreateTracer(Camera.main.transform.forward, tracerOrigin.position, tracerForce);
+        //TODO implement clip system for flare and gunfire.
+        if (Time.time > nextFlare)
+        {
+            ObjectPoolHandler.Instance.CreateTracer(Camera.main.transform.forward, tracerOrigin.position, tracerForce);
+            //play sound
+            nextFlare = Time.time + flareDelay;
+            animator.SetTrigger("FireFlare");
+        }
+
     }
 
     void CastRay()
@@ -58,9 +69,9 @@ public class Gun : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(cam.position, cam.forward, out hit)){
-            if (hit.collider.gameObject.CompareTag("Enemy"))
+            if (hit.collider.transform.root.CompareTag("Enemy"))
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+                hit.collider.transform.root.GetComponent<Enemy>().TakeDamage(damage);
 
                 Vector3 incomingVec = hit.point - cam.position;
                 Vector3 reflectVec = Vector3.Reflect(incomingVec, hit.normal);
@@ -74,8 +85,6 @@ public class Gun : MonoBehaviour
                 ObjectPoolHandler.Instance.CreateDecal(hit.normal, hit.point);
             }
         }
-
-
     }
 
     // Update is called once per frame

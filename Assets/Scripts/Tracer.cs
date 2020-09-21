@@ -11,6 +11,7 @@ using UnityEngine;
 public class Tracer : MonoBehaviour
 {
     Rigidbody rb;
+    [SerializeField] GameObject gizmo;
 
     private void Start()
     {
@@ -21,9 +22,11 @@ public class Tracer : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            Vector3 reversedVelocity = rb.velocity * -1f;
             Vector3 collisionPoint = collision.contacts[0].point;
-            Vector3 closestPointOfEntry = collision.collider.ClosestPoint(collisionPoint + reversedVelocity);
+            Vector3 pointToPlayer = GameManager.Instance.Player.transform.position - collisionPoint;
+            Vector3 adjustedDistance = collisionPoint + pointToPlayer * 0.1f;
+            Vector3 closestPointOfEntry = collision.collider.ClosestPoint(adjustedDistance);
+            this.transform.position = closestPointOfEntry;
             rb.velocity = Vector3.zero;
         }
     }
