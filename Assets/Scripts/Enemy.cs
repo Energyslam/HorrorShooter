@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(GameManager.Instance.Player.transform.position);
         }
 
-        if (agent.remainingDistance < 2f && !isIdle)
+        if (agent.remainingDistance < 2f && !isIdle) //TODO: change 2f to meaningful value
         {
             if (isChasing)
             {
@@ -141,7 +141,7 @@ public class Enemy : MonoBehaviour
         {
             currentLife -= damage;
         }
-        UpdateUI();
+        //UpdateUI();
     }
 
     void StartChasing()
@@ -172,9 +172,10 @@ public class Enemy : MonoBehaviour
 
     IEnumerator waitUntilFade()
     {
+        yield return new WaitForSeconds(1f); // wait 1 second before turning off agent, allowing other monsters to step over his corpse. Could use the animation length for waitforsecond as well
+        agent.enabled = false;
         yield return new WaitForSeconds(5f);
         healthBar.gameObject.transform.parent.gameObject.SetActive(false);
-        agent.enabled = false;
         isFading = true;
         yield return new WaitForSeconds(5f);
         this.gameObject.SetActive(false);
