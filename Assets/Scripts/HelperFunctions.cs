@@ -38,4 +38,11 @@ public class HelperFunctions : MonoBehaviour
             return Mathf.Approximately(a, b);
         }
     }
+
+    public static bool IsInViewingRange(float angleCutoff, Vector3 inputPoint, Transform origin)
+    {
+        float cosAngle = Vector3.Dot((inputPoint - origin.transform.position).normalized, origin.transform.forward);
+        float angle = Mathf.Acos(cosAngle) * Mathf.Rad2Deg;
+        return angle < angleCutoff;
+    }
 }

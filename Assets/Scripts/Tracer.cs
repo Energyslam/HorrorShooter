@@ -22,11 +22,11 @@ public class Tracer : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            Vector3 collisionPoint = collision.contacts[0].point;
-            Vector3 pointToPlayer = GameManager.Instance.Player.transform.position - collisionPoint;
-            Vector3 adjustedDistance = collisionPoint + pointToPlayer * 0.1f;
-            Vector3 closestPointOfEntry = collision.collider.ClosestPoint(adjustedDistance);
-            this.transform.position = closestPointOfEntry;
+            //Vector3 collisionPoint = collision.contacts[0].point;
+            //Vector3 pointToPlayer = GameManager.Instance.Player.transform.position - collisionPoint;
+            //Vector3 adjustedDistance = collisionPoint + pointToPlayer * 0.1f;
+            //Vector3 closestPointOfEntry = collision.collider.ClosestPoint(adjustedDistance);
+            //this.transform.position = closestPointOfEntry;
             rb.velocity = Vector3.zero;
         }
     }

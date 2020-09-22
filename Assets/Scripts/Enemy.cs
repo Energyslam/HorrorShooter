@@ -11,24 +11,19 @@ public class Enemy : MonoBehaviour
     Animator animator;
     AudioSource audio;
 
-    bool isChasing;
-    bool isIdle;
-    bool isDead;
-    bool isFading;
     [SerializeField]Image healthBar;
-    [SerializeField]float maxLife;
-    float currentLife;
-
-    public float nextAnimation;
-    public float animationDelay;
 
     [SerializeField]Transform currentTarget;
 
-    float timeBeforeMove = 2f;
-    float currentTime;
+    [SerializeField] private float stoppingDistance = 2f;
+    [SerializeField] private float walkingSpeed = 2.5f;
+    private float nextAnimation;
+    [SerializeField] private float animationDelay;
+    [SerializeField] private float maxLife;
+    private float currentLife;
 
-    float walkingSpeed = 2.5f;
-    float runningSpeed = 5f;
+    float nextIdle = 0f;
+    float idleDelay = 3f;
 
     #region Audio
     [SerializeField] List<AudioClip> breathingClips;
@@ -38,21 +33,34 @@ public class Enemy : MonoBehaviour
     float currentBreath = 0f;
     float nextBreath = 5f;
     float baseBreathDelay = 5f;
-
-    [SerializeField] bool GetTargetAtBeginning;
     #endregion
 
+    [SerializeField] HeadRigTarget tracker;
+
+    [SerializeField] float viewingDistance = 1f;
+
+    [SerializeField] Detector detector;
+
+    public bool moveAtStart;
     enum State
     {
         Idle,
+        Growling,
         Walking,
         Chasing,
         Dead,
+        SecretState
     }
 
+    State state = State.Idle;
+    State previousState = State.Idle;
     void Start()
     {
         Initialize();
+        if (!moveAtStart)
+        {
+            state = State.SecretState;
+        }
     }
 
     void Initialize()
@@ -61,58 +69,139 @@ public class Enemy : MonoBehaviour
         animator = this.GetComponent<Animator>();
         audio = this.GetComponent<AudioSource>();
         currentLife = maxLife;
-        currentTarget = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint();
-        agent.SetDestination(currentTarget.position);
     }
 
     void Update()
     {
-        if (isFading)
-        {
-            this.transform.position += transform.up * -1f * Time.deltaTime;
-        }
-        if (isDead) return;
-        Breathe();
-        animator.SetFloat("Speed", GetVelocity());
+        if (CheckIfDead()) return;
 
-        if (isChasing)
+        Breathe();
+        SetAnimatorSpeed();
+        CheckForTrackables();
+
+
+        if (state == State.Chasing)
         {
             agent.SetDestination(GameManager.Instance.Player.transform.position);
         }
 
-        if (agent.remainingDistance < 2f && !isIdle) //TODO: change 2f to meaningful value || GAAT HIER ALTIJD IN AAN HET BEGIN OMDAT HIJ NOG GEEN DESTINATION HEEFT GEHAD (denk ik, maar iig komthij hier altijd atm)
+        CheckForArrival();
+
+    }
+
+    void CheckForArrival()
+    {
+        //On arriving at destination
+        if (agent.remainingDistance < stoppingDistance)
         {
-            if (isChasing)
+            if (state == State.Idle)
+            {
+                if (Time.time > nextIdle)
+                {
+                    nextIdle = Time.time + nextIdle;
+                    SetNewAgentTarget();
+                    ChangeState(State.Walking);
+                }
+            }
+            else if (state == State.Walking)
+            {
+                ChangeState(State.Idle);
+            }
+            else if (state == State.Chasing)
             {
                 //attack
-            }
-            else if (!isChasing)
-            {
-                StartCoroutine(StayIdle());
             }
         }
     }
 
-    //TOOD: Turn off UI after a second or so, ugly to keep around
-
-    IEnumerator StayIdle()
+    void ChangeState(State newState)
     {
-        isIdle = true;
-        // look around or something
-        yield return new WaitForSeconds(3f);
-        SetNewTarget();
-        isIdle = false;
-        //set new target
+        previousState = this.state;
+        this.state = newState;
+
+        if (newState == State.Idle)
+        {
+            nextIdle = Time.time + idleDelay;
+        }
+        else if (newState == State.Chasing)
+        {
+            UpdateTracker(GameManager.Instance.Player.transform);
+        }
+
+        else if (newState == State.Dead)
+        {
+            StartCoroutine(Die());
+        }
+
+        if (previousState == State.Chasing)
+        {
+            ResetTracker();
+        }
+        UpdateAgentSpeed();
     }
 
-    public void SetNewTarget()
+    //TODO: Optimize later
+    void CheckForTrackables()
     {
-        agent.SetDestination(MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint(currentTarget).position);
+        if (detector.hasObjectsInView)
+        {
+            if (tracker.trackedTarget != detector.RetrieveClosestObject())
+            {
+                UpdateTracker(detector.RetrieveClosestObject());
+            }
+        }
+        else
+        {
+            ResetTracker();
+        }
+    }
+
+    void SetAnimatorSpeed()
+    {
+        float speed = 0f;
+
+        if (state == State.Walking)
+        {
+            speed = agent.velocity.magnitude / walkingSpeed;
+        }
+        else if (state == State.Chasing)
+        {
+            speed = agent.velocity.magnitude / walkingSpeed * 2f; ;
+        }
+        animator.SetFloat("Speed", speed);
+    }
+
+    void UpdateTracker(Transform target)
+    {
+        tracker.TrackTarget(target);
+    }
+
+    void ResetTracker()
+    {
+        tracker.Reset();
+    }
+
+    bool CheckIfDead()
+    {
+        if (state == State.Dead)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    void SetNewAgentTarget()
+    {
+        currentTarget = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint(currentTarget);
+        agent.SetDestination(currentTarget.position);
     }
 
     void Breathe()
     {
-        if (Time.time > currentBreath + nextBreath && !isChasing)
+        if (Time.time > currentBreath + nextBreath && (state == State.Walking || state == State.Idle))
         {
             currentBreath = Time.time;
             nextBreath = baseBreathDelay * Random.Range(0.8f, 1.2f);
@@ -123,41 +212,43 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    public void TakeDamage(float damage)
+    void GetHit()
     {
-        if (isDead) return;
+        if (state == State.Dead) return;
 
-        if (!isChasing)
+        if (state != State.Chasing)
         {
-            StartChasing();
+            ChangeState(State.Chasing);
         }
 
         if (Time.time > nextAnimation)
         {
-            //prolong agent delay before speedy;
+            //TODO: prolong agent delay before starting movement again;
             animator.SetTrigger("Hit");
             agent.velocity = Vector3.zero;
             nextAnimation = Time.time + animationDelay;
             audio.clip = damageClips[Random.Range(0, damageClips.Count)];
             audio.Play();
         }
-
-        if (currentLife - damage <= 0f)
-        {
-            Die();
-
-        }
-        else
-        {
-            currentLife -= damage;
-        }
-        //UpdateUI();
     }
 
-    void StartChasing()
+    void UpdateAgentSpeed()
     {
-        isChasing = true;
-        agent.speed = runningSpeed;
+        if (agent.isActiveAndEnabled)
+        {
+            if (state == State.Chasing)
+            {
+                agent.speed = walkingSpeed * 2f;
+            }
+            else if (state == State.Walking)
+            {
+                agent.speed = walkingSpeed;
+            }
+            else
+            {
+                agent.speed = 0f;
+            }
+        }
     }
 
     void UpdateUI()
@@ -169,41 +260,45 @@ public class Enemy : MonoBehaviour
         healthBar.fillAmount = currentLife / maxLife;
     }
 
-    void Die()
+    IEnumerator Die()
     {
-        currentLife = 0;
-        animator.SetTrigger("Die");
-        isDead = true;
-        agent.isStopped = true;
-        audio.clip = deathClip;
-        audio.Play();
-        StartCoroutine(waitUntilFade());
-    }
-
-    IEnumerator waitUntilFade()
-    {
-        yield return new WaitForSeconds(1f); // wait 1 second before turning off agent, allowing other monsters to step over his corpse. Could use the animation length for waitforsecond as well
+        animator.SetTrigger("Die"); //TODO?: create animator fucntion/script
+        //agent.isStopped = true; //would be nice to do, but can be a bit wonky? seems agent might still be moving a bit afterward. maybe just lack of experience with navmesh
         agent.enabled = false;
+        audio.clip = deathClip; // TODO?: Create audio function/script
+        audio.Play();
+
+        yield return new WaitForSeconds(3f); // wait 1 second before turning off agent, allowing other monsters to step over his corpse. Could use the animation length for waitforsecond as well
+
+
+        this.gameObject.AddComponent(typeof(FadeOutEnemy));  //add the script instead of holding functions/states only to fade out the enemy. 
+        healthBar.gameObject.transform.parent.gameObject.SetActive(false); //TODO: might be better to get a permanent reference to this, altho it's only used here
+
         yield return new WaitForSeconds(5f);
-        healthBar.gameObject.transform.parent.gameObject.SetActive(false);
-        isFading = true;
-        yield return new WaitForSeconds(5f);
+
         this.gameObject.SetActive(false);
+
+
     }
 
-    float GetVelocity()
+    public void TakeDamage(float damage)
     {
-        if (agent.speed == walkingSpeed)
+        if (state == State.Dead) return;
+        if (currentLife - damage <= 0f)
         {
-            return agent.velocity.magnitude / walkingSpeed;
-        }
-        else if (agent.speed == runningSpeed)
-        {
-            return agent.velocity.magnitude / runningSpeed * 2f;
+            currentLife = 0;
+            ChangeState(State.Dead);
         }
         else
         {
-            return 0f;
+            currentLife -= damage;
+            GetHit();
         }
+        //UpdateUI(); //TODO: I don't like how the UI looks in the dark
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(this.transform.position, viewingDistance);
     }
 }

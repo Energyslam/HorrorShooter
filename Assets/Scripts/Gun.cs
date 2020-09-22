@@ -22,7 +22,6 @@ public class Gun : MonoBehaviour
 
     int maxTracerRounds = 5;
     int currentTracerRounds;
-    [SerializeField]int tracerFrequency = 5;
 
     [SerializeField] Transform tracerOrigin;
 
@@ -69,7 +68,7 @@ public class Gun : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(cam.position, cam.forward, out hit)){
-            if (hit.collider.transform.root.CompareTag("Enemy"))
+            if (hit.collider.transform.root.CompareTag("Enemy")) //TOOD: refactor collision detection
             {
                 hit.collider.transform.root.GetComponent<Enemy>().TakeDamage(damage);
 
@@ -80,7 +79,7 @@ public class Gun : MonoBehaviour
                 Debug.DrawRay(hit.point, reflectVec, Color.green);
             }
 
-            else
+            else if (hit.collider.transform.root.gameObject.layer == LayerMask.NameToLayer("Environment"))
             {
                 ObjectPoolHandler.Instance.CreateDecal(hit.normal, hit.point);
             }
