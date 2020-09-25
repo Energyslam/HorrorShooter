@@ -109,7 +109,8 @@ public class Enemy : MonoBehaviour
             }
             else if (state == State.Chasing)
             {
-                //attack
+                Debug.Log("Remaing = " + agent.remainingDistance + " || stopping distance = " + stoppingDistance);
+                animator.SetTrigger("Attack");
             }
         }
     }
