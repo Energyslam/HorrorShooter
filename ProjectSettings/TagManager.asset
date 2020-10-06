@@ -8,6 +8,7 @@ TagManager:
   - Decal
   - Blood
   - Tracer
+  - EnemyAttackArea
   layers:
   - Default
   - TransparentFX

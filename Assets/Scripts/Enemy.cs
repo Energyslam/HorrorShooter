@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,17 +7,20 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    NavMeshAgent agent;
-    Animator animator;
-    AudioSource audio;
-
+    #region Properties
+    NavMeshAgent _agent;
+    Animator _animator;
+    AudioSource _audio;
+    Transform _player;
     [SerializeField]Image healthBar;
+    #endregion
 
-    [SerializeField]Transform currentTarget;
+    public Transform currentTarget { get; private set; }
 
-    [SerializeField] private float stoppingDistance = 2f;
-    [SerializeField] private float walkingSpeed = 2.5f;
+    [SerializeField] private float stoppingDistance = 5f;
+    [SerializeField] private float _walkingSpeed = 2.5f;
+    [SerializeField] private float _chasingSpeed = 5f;
+
     private float nextAnimation;
     [SerializeField] private float animationDelay;
     [SerializeField] private float maxLife;
@@ -28,7 +32,8 @@ public class Enemy : MonoBehaviour
     #region Audio
     [SerializeField] List<AudioClip> breathingClips;
     [SerializeField] List<AudioClip> damageClips;
-    [SerializeField] AudioClip deathClip;
+    [SerializeField] AudioClip _deathClip;
+    [SerializeField] AudioClip _growlClip;
 
     float currentBreath = 0f;
     float nextBreath = 5f;
@@ -41,104 +46,61 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] Detector detector;
 
-    public bool moveAtStart;
-    enum State
-    {
-        Idle,
-        Growling,
-        Walking,
-        Chasing,
-        Dead,
-        SecretState
-    }
+    private IState _deadState;
+    private IState _idleState;
+    private IState _walkingState;
+    private IState _chasingState;
 
-    State state = State.Idle;
-    State previousState = State.Idle;
+    public StateMachine _stateMachine;
+
+    bool waitingForChase;
     void Start()
     {
         Initialize();
-        if (!moveAtStart)
-        {
-            state = State.SecretState;
-        }
     }
 
     void Initialize()
     {
-        agent = this.GetComponent<NavMeshAgent>();
-        animator = this.GetComponent<Animator>();
-        audio = this.GetComponent<AudioSource>();
+        _agent = this.GetComponent<NavMeshAgent>();
+        _animator = this.GetComponent<Animator>();
+        _audio = this.GetComponent<AudioSource>();
+        _player = GameManager.Instance.Player.transform;
+
+        _stateMachine = new StateMachine();
+        _idleState = new Idle(_agent);
+        _walkingState = new Walking(_agent, _walkingSpeed, _animator, this.transform);
+        _chasingState = new Chasing(_agent, _player, _chasingSpeed, _walkingSpeed, _animator, this.transform);
+        _deadState = new Dead(_agent, _animator, _audio, _deathClip);
+
+        _player = GameManager.Instance.Player.transform;
         currentLife = maxLife;
     }
 
     void Update()
     {
-        if (CheckIfDead()) return;
+        if (_stateMachine.CurrentState == _deadState)
+            return;
+
+        _stateMachine.Tick();
 
         Breathe();
-        SetAnimatorSpeed();
         CheckForTrackables();
+        CheckForPlayerInSight(); //refactor
 
-
-        if (state == State.Chasing)
-        {
-            agent.SetDestination(GameManager.Instance.Player.transform.position);
-        }
-
-        CheckForArrival();
-
+        //if ((_player.transform.position - this.transform.position).magnitude > 15f && _stateMachine.CurrentState == _chasingState)
+        //{
+        //    _stateMachine.SetState(_walkingState);
+        //}
     }
 
-    void CheckForArrival()
+    IEnumerator GrowlAndWaitBeforeChasing()
     {
-        //On arriving at destination
-        if (agent.remainingDistance < stoppingDistance)
-        {
-            if (state == State.Idle)
-            {
-                if (Time.time > nextIdle)
-                {
-                    nextIdle = Time.time + nextIdle;
-                    SetNewAgentTarget();
-                    ChangeState(State.Walking);
-                }
-            }
-            else if (state == State.Walking)
-            {
-                ChangeState(State.Idle);
-            }
-            else if (state == State.Chasing)
-            {
-                Debug.Log("Remaing = " + agent.remainingDistance + " || stopping distance = " + stoppingDistance);
-                animator.SetTrigger("Attack");
-            }
-        }
-    }
-
-    void ChangeState(State newState)
-    {
-        previousState = this.state;
-        this.state = newState;
-
-        if (newState == State.Idle)
-        {
-            nextIdle = Time.time + idleDelay;
-        }
-        else if (newState == State.Chasing)
-        {
-            UpdateTracker(GameManager.Instance.Player.transform);
-        }
-
-        else if (newState == State.Dead)
-        {
-            StartCoroutine(Die());
-        }
-
-        if (previousState == State.Chasing)
-        {
-            ResetTracker();
-        }
-        UpdateAgentSpeed();
+        waitingForChase = true;
+        _audio.clip = _growlClip;
+        _audio.Play();
+        yield return new WaitForSeconds(2f);
+        _stateMachine.SetState(_chasingState);
+        waitingForChase = false;
     }
 
     //TODO: Optimize later
@@ -155,21 +117,18 @@ public class Enemy : MonoBehaviour
         {
             ResetTracker();
         }
+
     }
 
-    void SetAnimatorSpeed()
+    void CheckForPlayerInSight()
     {
-        float speed = 0f;
-
-        if (state == State.Walking)
+        if (_stateMachine.CurrentState != _chasingState && !waitingForChase)
         {
-            speed = agent.velocity.magnitude / walkingSpeed;
+            if (detector.containsPlayer)
+            {
+                StartCoroutine(GrowlAndWaitBeforeChasing());
+            }
         }
-        else if (state == State.Chasing)
-        {
-            speed = agent.velocity.magnitude / walkingSpeed * 2f; ;
-        }
-        animator.SetFloat("Speed", speed);
     }
 
     void UpdateTracker(Transform target)
@@ -182,73 +141,36 @@ public class Enemy : MonoBehaviour
         tracker.Reset();
     }
 
-    bool CheckIfDead()
-    {
-        if (state == State.Dead)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-    void SetNewAgentTarget()
-    {
-        currentTarget = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint(currentTarget);
-        agent.SetDestination(currentTarget.position);
-    }
-
     void Breathe()
     {
-        if (Time.time > currentBreath + nextBreath && (state == State.Walking || state == State.Idle))
+        if (Time.time > currentBreath + nextBreath && (_stateMachine.CurrentState == _walkingState || _stateMachine.CurrentState == _idleState))
         {
             currentBreath = Time.time;
-            nextBreath = baseBreathDelay * Random.Range(0.8f, 1.2f);
-            if (!audio.isPlaying)
+            nextBreath = baseBreathDelay * UnityEngine.Random.Range(0.8f, 1.2f); //magic numbers
+            if (!_audio.isPlaying)
             {
-                audio.clip = breathingClips[Random.Range(0, breathingClips.Count)];
-                audio.Play();
+                _audio.clip = breathingClips[UnityEngine.Random.Range(0, breathingClips.Count)];
+                _audio.Play();
             }
         }
     }
     void GetHit()
     {
-        if (state == State.Dead) return;
-
-        if (state != State.Chasing)
+        if (_stateMachine.CurrentState != _chasingState)
         {
-            ChangeState(State.Chasing);
+            waitingForChase = false;
+            StopCoroutine(GrowlAndWaitBeforeChasing());
+            _stateMachine.SetState(_chasingState);
         }
 
         if (Time.time > nextAnimation)
         {
-            //TODO: prolong agent delay before starting movement again;
-            animator.SetTrigger("Hit");
-            agent.velocity = Vector3.zero;
+            //TODO: prolong agent delay before starting movement again; ||||| Make into state ?
+            _animator.SetTrigger("Hit");
+            _agent.velocity = Vector3.zero;
             nextAnimation = Time.time + animationDelay;
-            audio.clip = damageClips[Random.Range(0, damageClips.Count)];
-            audio.Play();
-        }
-    }
-
-    void UpdateAgentSpeed()
-    {
-        if (agent.isActiveAndEnabled)
-        {
-            if (state == State.Chasing)
-            {
-                agent.speed = walkingSpeed * 2f;
-            }
-            else if (state == State.Walking)
-            {
-                agent.speed = walkingSpeed;
-            }
-            else
-            {
-                agent.speed = 0f;
-            }
+            _audio.clip = damageClips[UnityEngine.Random.Range(0, damageClips.Count)];
+            _audio.Play();
         }
     }
 
@@ -261,34 +183,13 @@ public class Enemy : MonoBehaviour
         healthBar.fillAmount = currentLife / maxLife;
     }
 
-    IEnumerator Die()
-    {
-        animator.SetTrigger("Die"); //TODO?: create animator fucntion/script
-        //agent.isStopped = true; //would be nice to do, but can be a bit wonky? seems agent might still be moving a bit afterward. maybe just lack of experience with navmesh
-        agent.enabled = false;
-        audio.clip = deathClip; // TODO?: Create audio function/script
-        audio.Play();
-
-        yield return new WaitForSeconds(3f); // wait 1 second before turning off agent, allowing other monsters to step over his corpse. Could use the animation length for waitforsecond as well
-
-
-        this.gameObject.AddComponent(typeof(FadeOutEnemy));  //add the script instead of holding functions/states only to fade out the enemy. 
-        healthBar.gameObject.transform.parent.gameObject.SetActive(false); //TODO: might be better to get a permanent reference to this, altho it's only used here
-
-        yield return new WaitForSeconds(5f);
-
-        this.gameObject.SetActive(false);
-
-
-    }
-
     public void TakeDamage(float damage)
     {
-        if (state == State.Dead) return;
+        if (_stateMachine.CurrentState == _deadState) return;
         if (currentLife - damage <= 0f)
         {
             currentLife = 0;
-            ChangeState(State.Dead);
+            _stateMachine.SetState(_deadState);
         }
         else
         {

@@ -25,18 +25,27 @@ public class Player : MonoBehaviour
     public float maxSwaySpeed;
     public float currentSwaySpeed;
     public float swayBuildUp;
+    public float swayTimer;
     float initialZ;
     #endregion
 
     [SerializeField] Gun currentGun;
     GameObject gunGO;
 
-    public float swayTimer;
+    private int maxHealth = 100;
+    private int currentHealth;
+
+    float damageTakenCooldown;
+
+    AudioSource _audio;
     void Start()
     {
         controller = this.GetComponent<CharacterController>();
         gunGO = currentGun.gameObject;
         initialZ = gunGO.transform.rotation.eulerAngles.z;
+        currentHealth = maxHealth;
+        _audio = GetComponent<AudioSource>();
+        GameManager.Instance.UpdatePlayerHealth(currentHealth);
     }
 
     // Update is called once per frame
@@ -49,6 +58,11 @@ public class Player : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             currentGun.FireTracer();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            currentGun.StartReload();
         }
         RotatePlayer();
         MovePlayer();
@@ -125,5 +139,36 @@ public class Player : MonoBehaviour
         //Simulate gravity
         gravityVelocity.y += Physics.gravity.y * Time.deltaTime;
         controller.Move(gravityVelocity * Time.deltaTime);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (currentHealth - damage <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            currentHealth -= damage;
+            _audio.Play();
+            GameManager.Instance.UpdatePlayerHealth(currentHealth);
+        }
+    }
+
+    void Die()
+    {
+        //TODO: implement menu etc.
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("EnemyAttackArea"))
+        {
+            if (Time.time > damageTakenCooldown)
+            {
+                TakeDamage(10);
+            }
+            damageTakenCooldown = Time.time + 1f;
+        }
     }
 }

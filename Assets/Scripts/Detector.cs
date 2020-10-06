@@ -8,10 +8,18 @@ public class Detector : MonoBehaviour
     public bool containsObjects;
     public bool hasObjectsInView;
     public float viewingAngle = 60f;
+    public bool containsPlayer;
 
     float nextCheck = 0f;
     float delay = 0.3f;
 
+    Transform playerTransform;
+
+
+    private void Start()
+    {
+        playerTransform = GameManager.Instance.Player.transform;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") || other.CompareTag("Tracer"))
@@ -45,8 +53,20 @@ public class Detector : MonoBehaviour
         {
             CheckForRetrievableObjects();
         }
+        CheckForPlayer();
     }
 
+    void CheckForPlayer()
+    {
+        if (currentTrackableObjects.Contains(playerTransform))
+        {
+            containsPlayer = true;
+        }
+        else
+        {
+            containsPlayer = false;
+        }
+    }
     //TODO: misschien beter systeem verzinnen voor die kut flares die inactive gaan en niet uit de triggerenter gaan
 
     //Dit is super onoverzichtelijk maar het werkt wel atm.

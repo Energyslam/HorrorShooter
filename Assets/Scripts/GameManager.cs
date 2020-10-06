@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Singleton class for holding references to permanent objects such as the player, and performing global tasks.
@@ -13,6 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _player;
     public GameObject Player { get { return _player; } }
     // Start is called before the first frame update
+    public Canvas canvas;
+    public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI playerHealthText;
+    public TextMeshProUGUI flareText;
 
     private void Awake()
     {
@@ -30,5 +36,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void UpdatePlayerHealth(int currentHealth)
+    {
+        //Is this dumb?
+        playerHealthText.text = "" + currentHealth;
     }
 }
