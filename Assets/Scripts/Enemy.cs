@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] Detector detector;
 
-    private IState _deadState;
+    public IState _deadState { get; private set; }
     private IState _idleState;
     private IState _walkingState;
     private IState _chasingState;
@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         Initialize();
+        _stateMachine.SetState(_walkingState);
     }
 
     void Initialize()
@@ -70,18 +71,18 @@ public class Enemy : MonoBehaviour
         _idleState = new Idle(_agent);
         _walkingState = new Walking(_agent, _walkingSpeed, _animator, this.transform);
         _chasingState = new Chasing(_agent, _player, _chasingSpeed, _walkingSpeed, _animator, this.transform);
-        _deadState = new Dead(_agent, _animator, _audio, _deathClip);
-
+        _deadState = new Dead(_agent, _animator, _audio, _deathClip, this.gameObject);
         _player = GameManager.Instance.Player.transform;
         currentLife = maxLife;
     }
 
     void Update()
     {
+        _stateMachine.Tick();
         if (_stateMachine.CurrentState == _deadState)
             return;
 
-        _stateMachine.Tick();
+
 
         Breathe();
         CheckForTrackables();
@@ -106,7 +107,7 @@ public class Enemy : MonoBehaviour
     //TODO: Optimize later
     void CheckForTrackables()
     {
-        if (detector.hasObjectsInView)
+        if (detector.hasObjectsInView && _stateMachine.CurrentState != _deadState)
         {
             if (tracker.trackedTarget != detector.RetrieveClosestObject())
             {

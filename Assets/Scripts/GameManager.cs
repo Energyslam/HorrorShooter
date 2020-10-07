@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Singleton class for holding references to permanent objects such as the player, and performing global tasks.
@@ -19,6 +20,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI playerHealthText;
     public TextMeshProUGUI flareText;
+    public TextMeshProUGUI ghoulKillsText;
+    public Image bloodscreen;
+
+    int ghoulKills = 0;
 
     private void Awake()
     {
@@ -38,9 +43,23 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void UpdateGhoulKills()
+    {
+        ghoulKills++;
+        ghoulKillsText.text = ghoulKills.ToString();
+    }
+
     public void UpdatePlayerHealth(int currentHealth)
     {
         //Is this dumb?
         playerHealthText.text = "" + currentHealth;
+        Color tmp = bloodscreen.color;
+        tmp.a = 1f - (float)currentHealth / 100f;
+        bloodscreen.color = tmp;
+    }
+
+    public void SwapToGameOverScene()
+    {
+        SceneManager.LoadScene("GameOver");
     }
 }

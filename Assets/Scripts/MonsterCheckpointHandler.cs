@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class MonsterCheckpointHandler : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class MonsterCheckpointHandler : MonoBehaviour
         }
     }
 
+    public void ReleaseCheckpoint(Transform checkpoint)
+    {
+        monsterCheckpoints.Find(x => x == checkpoint).gameObject.SetActive(true);
+    }
+
     /// <summary>
     /// Retrieves a random checkpoint from the list of active checkpoints
     /// </summary>
@@ -35,8 +41,10 @@ public class MonsterCheckpointHandler : MonoBehaviour
     public Transform ReturnRandomCheckpoint()
     {
         Transform tmp = monsterCheckpoints[Random.Range(0, monsterCheckpoints.Count)];
+        monsterCheckpoints.Find(x => x == tmp).gameObject.SetActive(false);
         return tmp;
     }
+    
     /// <summary>
     /// Retrieves a random checkpoint from the list of active checkpoints that is not the same as the given checkpoint
     /// </summary>
@@ -44,11 +52,14 @@ public class MonsterCheckpointHandler : MonoBehaviour
     /// <returns></returns>
     public Transform ReturnRandomCheckpoint(Transform current)
     {
-        Transform tmp = monsterCheckpoints[Random.Range(0, monsterCheckpoints.Count)];
+        List<Transform> activeTransforms = monsterCheckpoints.FindAll(x => x.gameObject.activeInHierarchy);
+        Transform tmp = activeTransforms[Random.Range(0, activeTransforms.Count)];
         if (tmp == current)
         {
             tmp = ReturnRandomCheckpoint(current);
+            return tmp;
         }
+        monsterCheckpoints.Find(x => x == tmp).gameObject.SetActive(false);
         return tmp;
     }
 }

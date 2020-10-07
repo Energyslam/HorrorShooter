@@ -18,7 +18,7 @@ public class Gun : MonoBehaviour
     [SerializeField] float fireDelay = 0.05f;
 
     float nextFlare;
-    [SerializeField] float flareDelay = 2f;
+    [SerializeField] float flareDelay = 3f;
 
     float maxTotalAmmo = 60;
     float currentTotalAmmo;
@@ -95,7 +95,15 @@ public class Gun : MonoBehaviour
         else
         {
             currentClipAmmo--;
-            _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
+            if (currentClipAmmo < 10)
+            {
+                _ammoText.text = "0" + currentClipAmmo + "/" + currentTotalAmmo;
+            }
+            else
+            {
+                _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
+            }
+
             return true;
         }
     }
@@ -116,6 +124,12 @@ public class Gun : MonoBehaviour
 
     public void Reload()
     {
+        currentClipAmmo = maxClipAmmo;
+        currentTotalAmmo = maxTotalAmmo;
+        _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
+
+        return;
+        //TODO Create ammo drops?
         float amountToReload = maxClipAmmo - currentClipAmmo;
 
         if (currentTotalAmmo - amountToReload >= 0)

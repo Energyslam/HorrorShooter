@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class DamageDealer : MonoBehaviour
 {
-    // Start is called before the first frame update
+    float cooldown = 0f;
+
+    Enemy enemy;
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.enemy = this.transform.root.GetComponent<Enemy>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && Time.time > cooldown && enemy._stateMachine.CurrentState != enemy._deadState)
         {
-            collision.gameObject.GetComponent<Player>().TakeDamage(25);
+            cooldown = Time.time + 2f;
+            collision.gameObject.GetComponent<Player>().TakeDamage(20);
         }
     }
 }

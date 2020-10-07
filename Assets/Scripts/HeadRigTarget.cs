@@ -37,12 +37,18 @@ public class HeadRigTarget : MonoBehaviour
     {
         if (target == null)
         {
-            Debug.Log("Null");
+            previousTarget = trackedTarget;
+            trackedTarget = origin;
+            lerpStart = Time.time;
         }
-        //isTracking = true;
-        previousTarget = trackedTarget;
-        trackedTarget = target;
-        lerpStart = Time.time;
+        else
+        {
+            //isTracking = true;
+            previousTarget = trackedTarget;
+            trackedTarget = target;
+            lerpStart = Time.time;
+        }
+
     }
 
     public void Reset()
@@ -51,7 +57,11 @@ public class HeadRigTarget : MonoBehaviour
         {
             return;
         }
-        if (this.transform.position != trackedTarget.position || trackedTarget == null)
+        if (trackedTarget == null)
+        {
+            trackedTarget = origin;
+        }
+        if (this.transform.position != trackedTarget.position)
         {
             previousTarget = this.transform;
         }

@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     public float swayIntensity;
     public float minSwaySpeed;
     public float maxSwaySpeed;
+    float maxSwayReference;
     public float currentSwaySpeed;
     public float swayBuildUp;
     public float swayTimer;
@@ -38,6 +39,9 @@ public class Player : MonoBehaviour
     float damageTakenCooldown;
 
     AudioSource _audio;
+
+    float regenDelay = 5f;
+    float nextRegen;
     void Start()
     {
         controller = this.GetComponent<CharacterController>();
@@ -46,6 +50,7 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         _audio = GetComponent<AudioSource>();
         GameManager.Instance.UpdatePlayerHealth(currentHealth);
+        maxSwayReference = maxSwaySpeed;
     }
 
     // Update is called once per frame
@@ -66,6 +71,7 @@ public class Player : MonoBehaviour
         }
         RotatePlayer();
         MovePlayer();
+        RegenLife();
     }
 
     void Sway(bool moving)
@@ -76,6 +82,11 @@ public class Player : MonoBehaviour
             if (currentSwaySpeed < maxSwaySpeed && currentSwaySpeed + swayBuildUp <= maxSwaySpeed)
             {
                 currentSwaySpeed += swayBuildUp;
+            }
+
+            if (currentSwaySpeed > maxSwaySpeed)
+            {
+                currentSwaySpeed -= swayBuildUp;
             }
         }
         else
@@ -128,10 +139,12 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !Input.GetMouseButton(0))
         {
             move = move * movementSpeed * 1.5f * Time.deltaTime;
+            maxSwaySpeed = maxSwayReference * 2f;
         }
         else
         {
             move = move * movementSpeed * Time.deltaTime;
+            maxSwaySpeed = maxSwayReference;
         }
 
         controller.Move(move);
@@ -145,30 +158,45 @@ public class Player : MonoBehaviour
     {
         if (currentHealth - damage <= 0)
         {
+            currentHealth = 0;
             Die();
         }
         else
         {
             currentHealth -= damage;
             _audio.Play();
-            GameManager.Instance.UpdatePlayerHealth(currentHealth);
         }
+        GameManager.Instance.UpdatePlayerHealth(currentHealth);
+    }
+
+    void RegenLife()
+    {
+        if (Time.time > nextRegen)
+        {
+            currentHealth++;
+            if (currentHealth > 100) currentHealth = 100;
+            GameManager.Instance.UpdatePlayerHealth(currentHealth);
+            nextRegen = Time.time + regenDelay;
+        }
+
     }
 
     void Die()
     {
+        GameManager.Instance.SwapToGameOverScene();
         //TODO: implement menu etc.
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("EnemyAttackArea"))
-        {
-            if (Time.time > damageTakenCooldown)
-            {
-                TakeDamage(10);
-            }
-            damageTakenCooldown = Time.time + 1f;
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("EnemyAttackArea"))
+    //    {
+    //        if (Time.time > damageTakenCooldown)
+    //        {
+    //            Debug.Log(Time.time + " is tijd " + " || is cooldown" + damageTakenCooldown);
+    //            TakeDamage(10);
+    //        }
+    //        damageTakenCooldown = Time.time + 12f;
+    //    }
+    //}
 }

@@ -9,7 +9,7 @@ public class Walking : MonoBehaviour, IState
     float _speed;
     float _animSpeed;
     Transform _enemy;
-    Vector3 _currentDestination;
+    Transform _currentDestination;
     Animator _animator;
     
     public Walking(NavMeshAgent agent, float speed, Animator animator, Transform enemy)
@@ -23,24 +23,33 @@ public class Walking : MonoBehaviour, IState
     {
         _animSpeed = 1f + (_agent.velocity.magnitude / _speed);
         _animator.SetFloat("Speed", _animSpeed);
+        if (_currentDestination == null || (_enemy.position - _currentDestination.position).magnitude < 2f)
+        {
+            GetNewDestination();
+        }
     }
 
     public void OnEnter()
     {
         _agent.enabled = true;
         _agent.speed = _speed;
-        if (_currentDestination == null)
-        {
-            _currentDestination = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint().position;
-        }
-        if ((_enemy.position - _currentDestination).magnitude < 2f){
-            _currentDestination = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint().position;
-        }
-        _agent.SetDestination(_currentDestination);
+        GetNewDestination();
+        _agent.SetDestination(_currentDestination.position);
     }
 
+    void GetNewDestination()
+    {
+        Transform tmp = _currentDestination;
+        _currentDestination = MonsterCheckpointHandler.Instance.ReturnRandomCheckpoint(_currentDestination);
+        _agent.SetDestination(_currentDestination.position);
+        if (tmp != null)
+        {
+            MonsterCheckpointHandler.Instance.ReleaseCheckpoint(tmp);
+        }
+    }
     public void OnExit()
     {
+        MonsterCheckpointHandler.Instance.ReleaseCheckpoint(_currentDestination);
         _animator.SetFloat("Speed", 0f);
     }
 }

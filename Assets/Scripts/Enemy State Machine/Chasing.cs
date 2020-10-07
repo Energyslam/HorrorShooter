@@ -14,7 +14,7 @@ public class Chasing : MonoBehaviour, IState
     float _animSpeed;
     bool isAttacking;
 
-    float attackDelay = 2f;
+    float attackDelay = 1f;
     float nextAttack;
     public Chasing(NavMeshAgent agent, Transform player, float runningSpeed, float walkingSpeed, Animator animator, Transform enemy)
     {
@@ -35,6 +35,11 @@ public class Chasing : MonoBehaviour, IState
                 _animSpeed = ((_agent.velocity.magnitude - _walkingSpeed) / _runningSpeed);
                 _animator.SetFloat("RunningSpeed", _animSpeed);
             }
+            if (_agent.velocity.magnitude < _walkingSpeed)
+            {
+                _animSpeed = ((_agent.velocity.magnitude) / _walkingSpeed);
+                _animator.SetFloat("Speed", _animSpeed);
+            }
         }
         CheckDistance();
         ManualTimeTracker();
@@ -42,7 +47,7 @@ public class Chasing : MonoBehaviour, IState
 
     public void CheckDistance()
     {
-        if ((_player.position - _enemy.position).magnitude < 4f && !isAttacking)
+        if ((_player.position - _enemy.position).magnitude < 3f && !isAttacking)
         {
             Attack();
         }
@@ -60,8 +65,10 @@ public class Chasing : MonoBehaviour, IState
     {
         isAttacking = true;
         nextAttack = Time.time + attackDelay;
-        _agent.speed = 2.5f;
+        _agent.speed = 0f;
+        _agent.velocity = Vector3.zero;
         _animator.SetFloat("RunningSpeed", 0f);
+        _animator.SetFloat("Speed", 0f);
         _animator.SetTrigger("Attack");
 
     }

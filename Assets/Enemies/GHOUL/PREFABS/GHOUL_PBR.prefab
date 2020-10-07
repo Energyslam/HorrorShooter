@@ -116,9 +116,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 493810}
+  - component: {fileID: 1743609130}
+  - component: {fileID: 1743609129}
+  - component: {fileID: 1743609128}
   m_Layer: 0
   m_Name: GHOUL_ L Hand
-  m_TagString: Untagged
+  m_TagString: EnemyAttackArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,6 +145,47 @@ Transform:
   m_Father: {fileID: 406502}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1743609130
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105384}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1743609129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105384}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.38, y: 0.17, z: 0.38}
+  m_Center: {x: -0.12, y: 0, z: 0}
+--- !u!114 &1743609128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a7fc3bde0e6f0446990af8c64eef598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &108666
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,9 +225,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 426932}
+  - component: {fileID: 2052556801}
+  - component: {fileID: 2052556800}
+  - component: {fileID: 2052556799}
   m_Layer: 0
   m_Name: GHOUL_ R Hand
-  m_TagString: Untagged
+  m_TagString: EnemyAttackArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,6 +254,47 @@ Transform:
   m_Father: {fileID: 417014}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2052556801
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109144}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &2052556800
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109144}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.26, y: 0.08, z: 0.26}
+  m_Center: {x: -0.12, y: 0, z: 0}
+--- !u!114 &2052556799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a7fc3bde0e6f0446990af8c64eef598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &112724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,9 +1621,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 1
   m_Speed: 2.5
-  m_Acceleration: 15
+  m_Acceleration: 6.5
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1557,9 +1645,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 1325951842}
-  currentTarget: {fileID: 0}
   stoppingDistance: 2
-  walkingSpeed: 2.5
+  _walkingSpeed: 3.5
+  _chasingSpeed: 9
   animationDelay: 1
   maxLife: 50
   breathingClips:
@@ -1571,11 +1659,12 @@ MonoBehaviour:
   damageClips:
   - {fileID: 8300000, guid: 84a14e1498655a044a71753dd84e30c2, type: 3}
   - {fileID: 8300000, guid: 3c25c3c7f360f454d92149364548ea57, type: 3}
-  deathClip: {fileID: 8300000, guid: c0211c5408766ec40aa6defbfd4976e5, type: 3}
+  _deathClip: {fileID: 8300000, guid: c0211c5408766ec40aa6defbfd4976e5, type: 3}
+  _growlClip: {fileID: 8300000, guid: 5c18f9511f26ed54683ff681da8d6e83, type: 3}
   tracker: {fileID: 492347252}
   viewingDistance: 1
   detector: {fileID: 1270085272}
-  moveAtStart: 1
+  _stateMachine: {fileID: 0}
 --- !u!114 &521691939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2870,6 +2959,7 @@ MonoBehaviour:
   containsObjects: 0
   hasObjectsInView: 0
   viewingAngle: 120
+  containsPlayer: 0
 --- !u!54 &1270085271
 Rigidbody:
   m_ObjectHideFlags: 0
