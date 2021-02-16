@@ -6,12 +6,11 @@ public class HeadRigTarget : MonoBehaviour
 {
     //public bool isTracking;
 
-    [SerializeField] Transform origin;
-
-    float lerpStart;
-
+    [SerializeField] private Transform origin;
     public Transform previousTarget;
     public Transform trackedTarget;
+
+    private float lerpStart;
 
     private void Start()
     {
@@ -19,17 +18,10 @@ public class HeadRigTarget : MonoBehaviour
         trackedTarget = origin;        
     }
 
-    //TODO: It keeps tracking even tho it's outside of view range
+    //TODO: Currently tracking while dead. 
 
     private void Update()
     {
-        //if (isTracking)
-        //{
-        //    if (trackedTarget != null)
-        //    {
-        //        this.transform.position = trackedTarget.position;
-        //    }
-        //}
         Lerp();
     }
 
@@ -43,7 +35,6 @@ public class HeadRigTarget : MonoBehaviour
         }
         else
         {
-            //isTracking = true;
             previousTarget = trackedTarget;
             trackedTarget = target;
             lerpStart = Time.time;
@@ -69,12 +60,9 @@ public class HeadRigTarget : MonoBehaviour
         {
             previousTarget = trackedTarget;
         }
-        //isTracking = false;
 
         trackedTarget = origin;
         lerpStart = Time.time;
-        //trackedTarget = null;
-        //this.transform.position = origin.position;
     }
 
     public void Lerp()

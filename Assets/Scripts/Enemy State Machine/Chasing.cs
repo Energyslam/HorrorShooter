@@ -5,17 +5,17 @@ using UnityEngine.AI;
 
 public class Chasing : MonoBehaviour, IState
 {
-    NavMeshAgent _agent;
-    Transform _player;
+    private NavMeshAgent _agent;
+    private Transform _player;
     Transform _enemy;
-    Animator _animator;
-    float _walkingSpeed;
-    float _runningSpeed;
-    float _animSpeed;
-    bool isAttacking;
+    private Animator _animator;
+    private float _walkingSpeed;
+    private float _runningSpeed;
+    private float _animSpeed;
+    private float attackDelay = 1f;
+    private float nextAttack;
+    private bool isAttacking;
 
-    float attackDelay = 1f;
-    float nextAttack;
     public Chasing(NavMeshAgent agent, Transform player, float runningSpeed, float walkingSpeed, Animator animator, Transform enemy)
     {
         _agent = agent;

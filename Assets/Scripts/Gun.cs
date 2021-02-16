@@ -6,37 +6,37 @@ using TMPro;
 [RequireComponent(typeof(Animator), typeof(AudioSource))]
 public class Gun : MonoBehaviour
 {
-    Animator animator;
-    AudioSource audio;
-    [SerializeField] AudioClip[] gunfireClips = new AudioClip[4];
-    [SerializeField] AudioClip reloadClip;
-    [SerializeField] AudioClip emptyClip;
-    [SerializeField]ParticleSystem flare;
-    [SerializeField] float damage;
+    private Animator animator;
+    private AudioSource audio;
+    [SerializeField] private AudioClip[] gunfireClips = new AudioClip[4];
+    [SerializeField] private AudioClip reloadClip;
+    [SerializeField] private AudioClip emptyClip;
+    [SerializeField] private ParticleSystem flare;
 
-    float nextFire;
-    [SerializeField] float fireDelay = 0.05f;
+    [SerializeField] private float damage;
 
-    float nextFlare;
-    [SerializeField] float flareDelay = 3f;
+    private float nextFire;
+    [SerializeField] private float fireDelay = 0.05f;
 
-    float maxTotalAmmo = 60;
-    float currentTotalAmmo;
-    float maxClipAmmo = 30;
-    float currentClipAmmo;
+    [SerializeField] private float flareDelay = 3f;
+    private float nextFlare;
+    [SerializeField] private float tracerForce;
 
-    float maxFlareAmmo = 7;
-    float currentFlareAmmo;
+    private float maxTotalAmmo = 60;
+    private float currentTotalAmmo;
+    private float maxClipAmmo = 30;
+    private float currentClipAmmo;
 
-    int maxTracerRounds = 5;
-    int currentTracerRounds;
+    private float maxFlareAmmo = 7;
+    private float currentFlareAmmo;
 
-    [SerializeField] Transform tracerOrigin;
+    private int maxTracerRounds = 5;
+    private int currentTracerRounds;
 
-    [SerializeField] float tracerForce;
+    [SerializeField] private Transform tracerOrigin;
 
-    TextMeshProUGUI _ammoText;
-    TextMeshProUGUI _flareText;
+    private TextMeshProUGUI _ammoText;
+    private TextMeshProUGUI _flareText;
 
     Transform cam;
     // Start is called before the first frame update
@@ -76,38 +76,6 @@ public class Gun : MonoBehaviour
 
         }
     }
-
-    bool isReloading()
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    bool AmmoUpdate()
-    {
-        if (currentClipAmmo - 1 < 0)
-        {
-            return false;
-        }
-        else
-        {
-            currentClipAmmo--;
-            if (currentClipAmmo < 10)
-            {
-                _ammoText.text = "0" + currentClipAmmo + "/" + currentTotalAmmo;
-            }
-            else
-            {
-                _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
-            }
-
-            return true;
-        }
-    }
-
     public void StartReload()
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Reload") && currentClipAmmo != maxClipAmmo && currentTotalAmmo != 0)
@@ -157,8 +125,38 @@ public class Gun : MonoBehaviour
         }
 
     }
+    private bool isReloading()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
+        {
+            return true;
+        }
+        return false;
+    }
 
-    void CastRay()
+    private bool AmmoUpdate()
+    {
+        if (currentClipAmmo - 1 < 0)
+        {
+            return false;
+        }
+        else
+        {
+            currentClipAmmo--;
+            if (currentClipAmmo < 10)
+            {
+                _ammoText.text = "0" + currentClipAmmo + "/" + currentTotalAmmo;
+            }
+            else
+            {
+                _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
+            }
+
+            return true;
+        }
+    }
+
+    private void CastRay()
     {
         RaycastHit hit;
 

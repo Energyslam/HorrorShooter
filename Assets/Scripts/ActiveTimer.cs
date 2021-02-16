@@ -16,7 +16,7 @@ public class ActiveTimer : MonoBehaviour
         creationTime = Time.time;
     }
 
-    void Update()
+    private void Update()
     {
         if (Time.time > creationTime + activeTime)
         {

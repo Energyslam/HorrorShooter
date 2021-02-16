@@ -7,18 +7,55 @@ public class Detector : MonoBehaviour
     [SerializeField]List<Transform> currentTrackableObjects = new List<Transform>();
     public bool containsObjects;
     public bool hasObjectsInView;
-    public float viewingAngle = 60f;
     public bool containsPlayer;
 
-    float nextCheck = 0f;
-    float delay = 0.3f;
+    public float viewingAngle = 60f;
+    private float nextCheck = 0f;
+    private float delay = 0.3f;
 
-    Transform playerTransform;
+    private Transform playerTransform;
 
 
     private void Start()
     {
         playerTransform = GameManager.Instance.Player.transform;
+    }
+
+    private void Update()
+    {
+        CheckForInactives();
+        if (containsObjects)
+        {
+            CheckForRetrievableObjects();
+        }
+        CheckForPlayer();
+    }
+
+    public Transform RetrieveClosestObject()
+    {
+        if (currentTrackableObjects.Contains(GameManager.Instance.Player.transform))
+        {
+            if (HelperFunctions.IsInViewingRange(viewingAngle, GameManager.Instance.Player.transform.position, this.transform))
+            {
+                return GameManager.Instance.Player.transform;
+            }
+        }
+        Transform t = null;
+        float currentClosestDistance = 99999f;
+        for (int i = 0; i < currentTrackableObjects.Count; i++)
+        {
+            if (currentTrackableObjects[i].gameObject.activeInHierarchy)
+            {
+                if (HelperFunctions.IsInViewingRange(viewingAngle, currentTrackableObjects[i].position, this.transform))
+                {
+                    if ((this.transform.position - currentTrackableObjects[i].position).magnitude < currentClosestDistance)
+                    {
+                        t = currentTrackableObjects[i];
+                    }
+                }
+            }
+        }
+        return t;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -46,17 +83,9 @@ public class Detector : MonoBehaviour
             }
         }
     }
-    private void Update()
-    {
-        CheckForInactives();
-        if (containsObjects)
-        {
-            CheckForRetrievableObjects();
-        }
-        CheckForPlayer();
-    }
 
-    void CheckForPlayer()
+
+    private void CheckForPlayer()
     {
         if (currentTrackableObjects.Contains(playerTransform))
         {
@@ -67,10 +96,7 @@ public class Detector : MonoBehaviour
             containsPlayer = false;
         }
     }
-    //TODO: misschien beter systeem verzinnen voor die kut flares die inactive gaan en niet uit de triggerenter gaan
-
-    //Dit is super onoverzichtelijk maar het werkt wel atm.
-    void CheckForInactives()
+    private void CheckForInactives()
     {
         for (int i = 0; i < currentTrackableObjects.Count; i++)
         {
@@ -86,7 +112,7 @@ public class Detector : MonoBehaviour
         }
     }
 
-    void CheckForRetrievableObjects()
+    private void CheckForRetrievableObjects()
     {
         bool tmpBool = false;
         for (int i = 0; i < currentTrackableObjects.Count; i++)
@@ -99,30 +125,5 @@ public class Detector : MonoBehaviour
         hasObjectsInView = tmpBool;
 
     }
-    public Transform RetrieveClosestObject()
-    {
-        if (currentTrackableObjects.Contains(GameManager.Instance.Player.transform))
-        {
-            if (HelperFunctions.IsInViewingRange(viewingAngle, GameManager.Instance.Player.transform.position, this.transform))
-            {
-                return GameManager.Instance.Player.transform;
-            }
-        }
-        Transform t = null;
-        float currentClosestDistance = 99999f;
-        for (int i = 0; i < currentTrackableObjects.Count; i++)
-        {
-            if (currentTrackableObjects[i].gameObject.activeInHierarchy)
-            {
-                if (HelperFunctions.IsInViewingRange(viewingAngle, currentTrackableObjects[i].position, this.transform))
-                {
-                    if ((this.transform.position - currentTrackableObjects[i].position).magnitude < currentClosestDistance)
-                    {
-                        t = currentTrackableObjects[i];
-                    }
-                }
-            }
-        }
-        return t;
-    }
+
 }

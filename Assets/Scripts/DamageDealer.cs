@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DamageDealer : MonoBehaviour
 {
-    float cooldown = 0f;
+    private float cooldown = 0f;
 
-    Enemy enemy;
+    private Enemy enemy;
 
     void Start()
     {

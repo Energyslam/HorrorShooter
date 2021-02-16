@@ -5,13 +5,13 @@ using UnityEngine.AI;
 
 public class Walking : MonoBehaviour, IState
 {
-    NavMeshAgent _agent;
-    float _speed;
-    float _animSpeed;
-    Transform _enemy;
-    Transform _currentDestination;
-    Animator _animator;
-    
+    private NavMeshAgent _agent;
+    private Transform _enemy;
+    private Transform _currentDestination;
+    private Animator _animator;
+    private float _speed;
+    private float _animSpeed;
+
     public Walking(NavMeshAgent agent, float speed, Animator animator, Transform enemy)
     {
         _agent = agent;

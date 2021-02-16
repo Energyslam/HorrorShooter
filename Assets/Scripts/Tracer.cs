@@ -10,8 +10,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Tracer : MonoBehaviour
 {
-    Rigidbody rb;
-    [SerializeField] GameObject gizmo;
+    private Rigidbody rb;
+    [SerializeField] private GameObject gizmo;
 
     private void Start()
     {

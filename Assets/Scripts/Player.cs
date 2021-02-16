@@ -30,18 +30,18 @@ public class Player : MonoBehaviour
     float initialZ;
     #endregion
 
-    [SerializeField] Gun currentGun;
-    GameObject gunGO;
+    [SerializeField] private Gun currentGun;
+    private GameObject gunGO;
+
+    private AudioSource _audio;
+
+    private float damageTakenCooldown;
+    private float regenDelay = 5f;
+    private float nextRegen;
 
     private int maxHealth = 100;
     private int currentHealth;
 
-    float damageTakenCooldown;
-
-    AudioSource _audio;
-
-    float regenDelay = 5f;
-    float nextRegen;
     void Start()
     {
         controller = this.GetComponent<CharacterController>();
@@ -73,8 +73,21 @@ public class Player : MonoBehaviour
         MovePlayer();
         RegenLife();
     }
-
-    void Sway(bool moving)
+    public void TakeDamage(int damage)
+    {
+        if (currentHealth - damage <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+        else
+        {
+            currentHealth -= damage;
+            _audio.Play();
+        }
+        GameManager.Instance.UpdatePlayerHealth(currentHealth);
+    }
+    private void Sway(bool moving)
     {
 
         if (moving)
@@ -102,7 +115,7 @@ public class Player : MonoBehaviour
         gunGO.transform.localRotation = Quaternion.Euler(currentRota);
     }
 
-    void RotatePlayer()
+    private void RotatePlayer()
     {
         float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * Time.deltaTime * mouseSensitivity;
@@ -114,7 +127,7 @@ public class Player : MonoBehaviour
         this.transform.Rotate(Vector3.up * mouseX);
     }
 
-    void MovePlayer()
+    private void MovePlayer()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -154,22 +167,7 @@ public class Player : MonoBehaviour
         controller.Move(gravityVelocity * Time.deltaTime);
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (currentHealth - damage <= 0)
-        {
-            currentHealth = 0;
-            Die();
-        }
-        else
-        {
-            currentHealth -= damage;
-            _audio.Play();
-        }
-        GameManager.Instance.UpdatePlayerHealth(currentHealth);
-    }
-
-    void RegenLife()
+    private void RegenLife()
     {
         if (Time.time > nextRegen)
         {
@@ -181,7 +179,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void Die()
+    private void Die()
     {
         GameManager.Instance.SwapToGameOverScene();
         //TODO: implement menu etc.

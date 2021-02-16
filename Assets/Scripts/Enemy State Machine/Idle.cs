@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class Idle : MonoBehaviour, IState
 {
-    NavMeshAgent _agent;
-    float currentIdleTime;
+    private NavMeshAgent _agent;
+    private float currentIdleTime;
     public Idle(NavMeshAgent agent)
     {
         _agent = agent;

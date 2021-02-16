@@ -5,14 +5,14 @@ using UnityEngine.AI;
 
 public class Dead : MonoBehaviour, IState
 {
-    NavMeshAgent _agent;
-    Animator _animator;
-    AudioSource _audio;
-    AudioClip _clip;
-    GameObject _enemyGO;
+    private NavMeshAgent _agent;
+    private Animator _animator;
+    private  AudioSource _audio;
+    private AudioClip _clip;
+    private GameObject _enemyGO;
 
-    float despawnDelay = 8f;
-    float despawnTimer;
+    private float despawnDelay = 8f;
+    private float despawnTimer;
     public Dead(NavMeshAgent agent, Animator animator, AudioSource audio, AudioClip clip, GameObject enemyGO)
     {
         _agent = agent;

@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _player;
     public GameObject Player { get { return _player; } }
-    // Start is called before the first frame update
     public Canvas canvas;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI playerHealthText;
@@ -23,7 +22,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI ghoulKillsText;
     public Image bloodscreen;
 
-    int ghoulKills = 0;
+    private int ghoulKills = 0;
 
     private void Awake()
     {

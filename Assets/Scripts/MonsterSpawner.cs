@@ -6,15 +6,17 @@ public class MonsterSpawner : MonoBehaviour
 {
     private static MonsterSpawner _instance;
     public static MonsterSpawner Instance { get { return _instance; } }
-    [SerializeField] GameObject ghoul;
-    List<Transform> spawnLocations = new List<Transform>();
+
+    [SerializeField] private GameObject ghoul;
+
+    private List<Transform> spawnLocations = new List<Transform>();
     public List<GameObject> existingMonsters = new List<GameObject>();
 
-    float spawnDelay = 15f;
-    float nextSpawn;
+    private float spawnDelay = 15f;
+    private float nextSpawn;
 
-    int monstersToSpawn;
-    int maxMonstersToSpawn;
+    private int monstersToSpawn;
+    private int maxMonstersToSpawn;
 
     void Awake()
     {
@@ -52,25 +54,25 @@ public class MonsterSpawner : MonoBehaviour
             nextSpawn = Time.time + spawnDelay;
         }
     }
-
-    void SpawnMonster()
-    {
-        //TODO spawn at farthest away?
-        GameObject go = Instantiate(ghoul, spawnLocations[Random.Range(0, spawnLocations.Count)].position, Quaternion.identity);
-        existingMonsters.Add(go);
-    }
-
-    void CheckForDeadMonsters()
-    {
-
-    }
-
     public void RemoveMonster(GameObject go)
     {
         existingMonsters.Remove(go);
     }
 
-    void SpawnInitialMonsters()
+    private void SpawnMonster()
+    {
+        //TODO change from picking a random point to the farthest away point
+        GameObject go = Instantiate(ghoul, spawnLocations[Random.Range(0, spawnLocations.Count)].position, Quaternion.identity);
+        existingMonsters.Add(go);
+    }
+
+    private void CheckForDeadMonsters()
+    {
+
+    }
+
+
+    private void SpawnInitialMonsters()
     {
         List<Transform> copySpawnLocations = spawnLocations;
         List<Transform> usedSpawnLocation = new List<Transform>();

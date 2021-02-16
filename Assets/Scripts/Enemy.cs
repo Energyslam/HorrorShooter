@@ -20,31 +20,32 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float stoppingDistance = 5f;
     [SerializeField] private float _walkingSpeed = 2.5f;
     [SerializeField] private float _chasingSpeed = 5f;
-
-    private float nextAnimation;
     [SerializeField] private float animationDelay;
     [SerializeField] private float maxLife;
+    [SerializeField] private float viewingDistance = 1f;
+
+    private float currentBreath = 0f;
+    private float nextBreath = 5f;
+    private float baseBreathDelay = 5f;
+
+    private float nextAnimation;
     private float currentLife;
 
-    float nextIdle = 0f;
-    float idleDelay = 3f;
+    private float nextIdle = 0f;
+    private float idleDelay = 3f;
 
     #region Audio
-    [SerializeField] List<AudioClip> breathingClips;
-    [SerializeField] List<AudioClip> damageClips;
-    [SerializeField] AudioClip _deathClip;
-    [SerializeField] AudioClip _growlClip;
+    [SerializeField] private List<AudioClip> breathingClips;
+    [SerializeField] private List<AudioClip> damageClips;
+    [SerializeField] private AudioClip _deathClip;
+    [SerializeField] private AudioClip _growlClip;
 
-    float currentBreath = 0f;
-    float nextBreath = 5f;
-    float baseBreathDelay = 5f;
+
     #endregion
 
-    [SerializeField] HeadRigTarget tracker;
+    [SerializeField] private HeadRigTarget tracker;
 
-    [SerializeField] float viewingDistance = 1f;
-
-    [SerializeField] Detector detector;
+    [SerializeField] private Detector detector;
 
     public IState _deadState { get; private set; }
     private IState _idleState;
@@ -53,14 +54,14 @@ public class Enemy : MonoBehaviour
 
     public StateMachine _stateMachine;
 
-    bool waitingForChase;
-    void Start()
+    private bool waitingForChase;
+    private void Start()
     {
         Initialize();
         _stateMachine.SetState(_walkingState);
     }
 
-    void Initialize()
+    private void Initialize()
     {
         _agent = this.GetComponent<NavMeshAgent>();
         _animator = this.GetComponent<Animator>();
@@ -76,25 +77,33 @@ public class Enemy : MonoBehaviour
         currentLife = maxLife;
     }
 
-    void Update()
+    private void Update()
     {
         _stateMachine.Tick();
         if (_stateMachine.CurrentState == _deadState)
             return;
 
-
-
         Breathe();
         CheckForTrackables();
-        CheckForPlayerInSight(); //refactor
-
-        //if ((_player.transform.position - this.transform.position).magnitude > 15f && _stateMachine.CurrentState == _chasingState)
-        //{
-        //    _stateMachine.SetState(_walkingState);
-        //}
+        CheckForPlayerInSight();
     }
 
-    IEnumerator GrowlAndWaitBeforeChasing()
+    public void TakeDamage(float damage)
+    {
+        if (_stateMachine.CurrentState == _deadState) return;
+        if (currentLife - damage <= 0f)
+        {
+            currentLife = 0;
+            _stateMachine.SetState(_deadState);
+        }
+        else
+        {
+            currentLife -= damage;
+            GetHit();
+        }
+    }
+
+    private IEnumerator GrowlAndWaitBeforeChasing()
     {
         waitingForChase = true;
         _audio.clip = _growlClip;
@@ -104,8 +113,7 @@ public class Enemy : MonoBehaviour
         waitingForChase = false;
     }
 
-    //TODO: Optimize later
-    void CheckForTrackables()
+    private void CheckForTrackables()
     {
         if (detector.hasObjectsInView && _stateMachine.CurrentState != _deadState)
         {
@@ -121,7 +129,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    void CheckForPlayerInSight()
+    private void CheckForPlayerInSight()
     {
         if (_stateMachine.CurrentState != _chasingState && !waitingForChase)
         {
@@ -132,22 +140,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void UpdateTracker(Transform target)
+    private void UpdateTracker(Transform target)
     {
         tracker.TrackTarget(target);
     }
 
-    void ResetTracker()
+    private void ResetTracker()
     {
         tracker.Reset();
     }
 
-    void Breathe()
+    private void Breathe()
     {
         if (Time.time > currentBreath + nextBreath && (_stateMachine.CurrentState == _walkingState || _stateMachine.CurrentState == _idleState))
         {
             currentBreath = Time.time;
-            nextBreath = baseBreathDelay * UnityEngine.Random.Range(0.8f, 1.2f); //magic numbers
+            nextBreath = baseBreathDelay * UnityEngine.Random.Range(0.8f, 1.2f); //TODO magic numbers, change to something meaningful?
             if (!_audio.isPlaying)
             {
                 _audio.clip = breathingClips[UnityEngine.Random.Range(0, breathingClips.Count)];
@@ -155,7 +163,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    void GetHit()
+    private void GetHit()
     {
         if (_stateMachine.CurrentState != _chasingState)
         {
@@ -175,29 +183,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void UpdateUI()
+    private void UpdateUI()
     {
         if (!healthBar.transform.parent.gameObject.activeInHierarchy)
         {
             healthBar.transform.parent.gameObject.SetActive(true);
         }
         healthBar.fillAmount = currentLife / maxLife;
-    }
-
-    public void TakeDamage(float damage)
-    {
-        if (_stateMachine.CurrentState == _deadState) return;
-        if (currentLife - damage <= 0f)
-        {
-            currentLife = 0;
-            _stateMachine.SetState(_deadState);
-        }
-        else
-        {
-            currentLife -= damage;
-            GetHit();
-        }
-        //UpdateUI(); //TODO: I don't like how the UI looks in the dark
     }
 
     private void OnDrawGizmos()
