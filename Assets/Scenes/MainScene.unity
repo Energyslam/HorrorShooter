@@ -244,7 +244,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1687258584}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2549,8 +2549,8 @@ MonoBehaviour:
   damage: 2
   fireDelay: 0.115
   flareDelay: 2
-  tracerOrigin: {fileID: 1222275499}
   tracerForce: 50
+  tracerOrigin: {fileID: 1222275499}
 --- !u!82 &747729136
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4191,7 +4191,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 140.5, y: 36.7}
+  m_AnchoredPosition: {x: 140.5, y: 36.700012}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1261237640
@@ -4330,6 +4330,8 @@ MonoBehaviour:
   flareText: {fileID: 1261237640}
   ghoulKillsText: {fileID: 1961142138}
   bloodscreen: {fileID: 1780832354}
+  m_bloodscreen: {fileID: 2100000, guid: da7c8e507eca1d24c89228cb7a533749, type: 2}
+  alphaMultiplier: 0
 --- !u!4 &1306167273
 Transform:
   m_ObjectHideFlags: 0
@@ -4947,7 +4949,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 85.9, y: -5}
+  m_AnchoredPosition: {x: 85.900024, y: -5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1433164620
@@ -5369,7 +5371,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -119.1, y: 0}
+  m_AnchoredPosition: {x: -119.099976, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1541053178
@@ -6622,8 +6624,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.4528302, g: 0.09611963, b: 0.09611963, a: 0}
+  m_Material: {fileID: 2100000, guid: da7c8e507eca1d24c89228cb7a533749, type: 2}
+  m_Color: {r: 0.4528302, g: 0.09611963, b: 0.09611963, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -50,8 +50,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerHealth(int currentHealth)
     {
-        //Is this dumb?
-        playerHealthText.text = "" + currentHealth;
+        playerHealthText.text = currentHealth.ToString();
+        //alphaMultiplier = 1f - (float)currentHealth / 100f;
+        //m_bloodscreen.SetFloat("_AlphaMultiplier", alphaMultiplier);
         Color tmp = bloodscreen.color;
         tmp.a = 1f - (float)currentHealth / 100f;
         bloodscreen.color = tmp;
