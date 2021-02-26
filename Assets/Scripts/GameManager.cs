@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public Image bloodscreen;
 
     private int ghoulKills = 0;
+    private int playerMaxHealth;
 
     private void Awake()
     {
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        playerMaxHealth = Player.GetComponent<Player>().MaxHealth;
     }
 
     public void UpdateGhoulKills()
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour
         //alphaMultiplier = 1f - (float)currentHealth / 100f;
         //m_bloodscreen.SetFloat("_AlphaMultiplier", alphaMultiplier);
         Color tmp = bloodscreen.color;
-        tmp.a = 1f - (float)currentHealth / 100f;
+        tmp.a = 1f - (float)currentHealth / playerMaxHealth;
         bloodscreen.color = tmp;
     }
 

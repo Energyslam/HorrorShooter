@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     private float regenDelay = 5f;
     private float nextRegen;
 
+    public int MaxHealth { get { return maxHealth; } }
     private int maxHealth = 100;
     private int currentHealth;
 
@@ -47,9 +48,9 @@ public class Player : MonoBehaviour
         controller = this.GetComponent<CharacterController>();
         gunGO = currentGun.gameObject;
         initialZ = gunGO.transform.rotation.eulerAngles.z;
-        currentHealth = maxHealth;
-        _audio = GetComponent<AudioSource>();
+        currentHealth = MaxHealth;
         GameManager.Instance.UpdatePlayerHealth(currentHealth);
+        _audio = GetComponent<AudioSource>();
         maxSwayReference = maxSwaySpeed;
     }
 
@@ -91,6 +92,15 @@ public class Player : MonoBehaviour
             _audio.Play();
         }
         GameManager.Instance.UpdatePlayerHealth(currentHealth);
+    }
+
+    public void IncreaseHealth(int amount)
+    {
+        if (currentHealth < maxHealth)
+        {
+            Mathf.Clamp(currentHealth += amount, 0, 100);
+            GameManager.Instance.UpdatePlayerHealth(currentHealth);
+        }
     }
     private void Sway(bool moving)
     {
@@ -174,7 +184,7 @@ public class Player : MonoBehaviour
 
     private void RegenLife()
     {
-        if (Time.time > nextRegen)
+        if (Time.time > nextRegen && currentHealth < maxHealth)
         {
             currentHealth++;
             if (currentHealth > 100) currentHealth = 100;
