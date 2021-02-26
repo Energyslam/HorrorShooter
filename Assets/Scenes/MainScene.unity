@@ -4330,8 +4330,6 @@ MonoBehaviour:
   flareText: {fileID: 1261237640}
   ghoulKillsText: {fileID: 1961142138}
   bloodscreen: {fileID: 1780832354}
-  m_bloodscreen: {fileID: 2100000, guid: da7c8e507eca1d24c89228cb7a533749, type: 2}
-  alphaMultiplier: 0
 --- !u!4 &1306167273
 Transform:
   m_ObjectHideFlags: 0
@@ -6624,15 +6622,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: da7c8e507eca1d24c89228cb7a533749, type: 2}
-  m_Color: {r: 0.4528302, g: 0.09611963, b: 0.09611963, a: 1}
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.6981132, g: 0.13501245, b: 0.13501245, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2f7e54f9694b44f4fafa7d318fe2e8eb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 02d1ea0660771514fad50645dbf61970, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
