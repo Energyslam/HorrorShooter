@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI playerHealthText;
     public TextMeshProUGUI flareText;
     public TextMeshProUGUI ghoulKillsText;
+    public TextMeshProUGUI playerHealthIncreaseText;
     public Image bloodscreen;
 
     private int ghoulKills = 0;
@@ -48,6 +49,11 @@ public class GameManager : MonoBehaviour
     {
         ghoulKills++;
         ghoulKillsText.text = ghoulKills.ToString();
+    }
+
+    public void ShowHealthIncrease(int amount)
+    {
+        playerHealthIncreaseText.GetComponent<LerpAlphaUI>().ShowTextField(amount);
     }
 
     public void UpdatePlayerHealth(int currentHealth)

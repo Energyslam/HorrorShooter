@@ -95,6 +95,7 @@ public class Enemy : MonoBehaviour
         {
             currentLife = 0;
             _stateMachine.SetState(_deadState);
+            ResetTracker();
         }
         else
         {

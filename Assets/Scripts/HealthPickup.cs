@@ -33,10 +33,14 @@ public class HealthPickup : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<Player>().IncreaseHealth(healthAmount);
-            startTimeDisappear = Time.time;
-            isDisappearing = true;
-            this.GetComponent<BoxCollider>().enabled = false;
+            Player player = other.gameObject.GetComponent<Player>();
+            if (player.CurrentHealth < player.MaxHealth)
+            {
+                player.IncreaseHealth(healthAmount);
+                startTimeDisappear = Time.time;
+                isDisappearing = true;
+                this.GetComponent<BoxCollider>().enabled = false;
+            }
         }
     }
 }

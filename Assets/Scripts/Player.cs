@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private float nextRegen;
 
     public int MaxHealth { get { return maxHealth; } }
+    public int CurrentHealth { get { return currentHealth; } }
     private int maxHealth = 100;
     private int currentHealth;
 
@@ -100,6 +101,7 @@ public class Player : MonoBehaviour
         {
             Mathf.Clamp(currentHealth += amount, 0, 100);
             GameManager.Instance.UpdatePlayerHealth(currentHealth);
+            GameManager.Instance.ShowHealthIncrease(amount);
         }
     }
     private void Sway(bool moving)

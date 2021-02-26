@@ -29,6 +29,8 @@ public class Gun : MonoBehaviour
 
     private float maxFlareAmmo = 7;
     private float currentFlareAmmo;
+    private float lastFlareRegen;
+    private float flareRegenRate = 5f; //TODO balance flare regen rate, or add on kill/pickups as well.
 
     private int maxTracerRounds = 5;
     private int currentTracerRounds;
@@ -46,12 +48,20 @@ public class Gun : MonoBehaviour
         audio = this.GetComponent<AudioSource>();
         currentClipAmmo = maxClipAmmo;
         currentTotalAmmo = maxTotalAmmo;
+        currentFlareAmmo = maxFlareAmmo;
         currentTracerRounds = maxTracerRounds;
         cam = Camera.main.transform;
+        _flareText = GameManager.Instance.flareText;
+        _flareText.text = currentFlareAmmo + "/" + maxFlareAmmo;
         _ammoText = GameManager.Instance.ammoText;
         _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
-        currentFlareAmmo = maxFlareAmmo;
         audio.clip = reloadClip;
+        lastFlareRegen = Time.time;
+    }
+
+    private void Update()
+    {
+        RegenerateFlare();
     }
 
     public void Fire()
@@ -97,7 +107,7 @@ public class Gun : MonoBehaviour
         _ammoText.text = currentClipAmmo + "/" + currentTotalAmmo;
 
         return;
-        //TODO Create ammo drops?
+        //TODO figure out if I want to use an ammo system for the rifle. Rifle infinite ammo and use special weapons that need to find ammo?
         float amountToReload = maxClipAmmo - currentClipAmmo;
 
         if (currentTotalAmmo - amountToReload >= 0)
@@ -116,14 +126,16 @@ public class Gun : MonoBehaviour
 
     public void FireTracer()
     {
-        //TODO implement clip system for flare and gunfire.
-        if (Time.time > nextFlare && !isReloading())
+        if (Time.time > nextFlare && !isReloading() && canFireFlare())
         {
+            if (currentFlareAmmo == maxFlareAmmo) lastFlareRegen = Time.time;
+            currentFlareAmmo--;
+            _flareText.text = currentFlareAmmo + "/" + maxFlareAmmo;
+
             ObjectPoolHandler.Instance.CreateTracer(Camera.main.transform.forward, tracerOrigin.position, tracerForce);
             nextFlare = Time.time + flareDelay;
             animator.SetTrigger("FireFlare");
         }
-
     }
     private bool isReloading()
     {
@@ -132,6 +144,11 @@ public class Gun : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool canFireFlare()
+    {
+        return (currentFlareAmmo - 1 < 0) ? false : true;
     }
 
     private bool AmmoUpdate()
@@ -153,6 +170,19 @@ public class Gun : MonoBehaviour
             }
 
             return true;
+        }
+    }
+
+    private void RegenerateFlare()
+    {
+        if (Time.time > (lastFlareRegen + flareRegenRate))
+        {
+            if (currentFlareAmmo < maxFlareAmmo)
+            {
+                currentFlareAmmo++;
+                _flareText.text = currentFlareAmmo + "/" + maxFlareAmmo;
+                lastFlareRegen = Time.time;
+            }
         }
     }
 
